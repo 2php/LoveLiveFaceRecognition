@@ -1,0 +1,9 @@
+data\train\47idolizedEli.png 0
+data\train\64idolizedHanayo.png 1
+data\train\92idolizedKotori.png 2
+data\train\109idolizedHonoka.png 3
+data\train\259idolizedMaki.png 4
+data\train\357Nico.png 5
+data\train\406idolizedNozomi.png 6
+data\train\562Rin.png 7
+data\train\682Umi.png 8

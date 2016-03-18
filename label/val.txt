@@ -1,0 +1,3 @@
+data\val\571idolizedKotori.png 3
+data\val\747idolizedHonoka.png 2
+data\val\842Nico.png 5
