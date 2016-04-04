@@ -35,6 +35,9 @@ If the excution end without any problem, then excute convertimage2ldb_train.bat 
 After data converting then excute computeMean_train.bat and computeMean_val.bat to the compute the mean of the dataset, the results will be saved in .\model as train_mean.binaryproto and val_mean.binaryproto
 
 ### Add Data to Net and Train
+We used Alex model, for model structure:
+![structure](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/deploy.bmp)
+
 Open .\model\train_val.prototxt to change the path (in line 13, 16, 32, 35 if your did not modify this file after download) and the same to .\model\solver.prototext.
 
 Change the parameters...
