@@ -1,5 +1,5 @@
 # LoveLiveFaceRecognition
-A simple demo of how to use caffe to train CNN on Windows
+A simple toy of how to use caffe to train CNN on Windows
 
 ## Usage
 
@@ -8,11 +8,15 @@ The dataset can be download from [School Idol Tomodachi - Cards Album](http://sc
 
 Or you can also use a download tool [LoveLiveCardsAlbum - GitHub](https://github.com/inlmouse/LoveLiveCardsAlbum) which is able to download all of images in the album automatically. 
 
-Crop the images you download into 256*256 and put them into .\data\train and .\data\val
+Crop the images you download into 128*128 and put them into .\complete_data
 
 We provied a uncropped dataset, download: [Mu's Dataset - BaiduYunPan](http://pan.baidu.com/s/1eRkRjb0)
 
+**New**  Now we provide a detected and manual cleaned dataset, download: [Mu's Detected Dataset - BaiduYunPan](http://pan.baidu.com/s/1boIDDKF)
+
 You can use the anime face detection program in [lbpcascade_animeface.Net - GitHub](https://github.com/inlmouse/lbpcascade_animeface.Net) to crop ypur dataset.
+
+**New** A pure C++ detection and dataset/label building script has been provide in .\main.cpp.
 
 The label marking is very simple, take .\label\train.txt as example:
 <pre><code>
@@ -20,31 +24,26 @@ The label marking is very simple, take .\label\train.txt as example:
 </code></pre>
 Just format every line as the expression above, do NOT add your project root.
 
-The label_num count from 0 instead of 1. And the processing of val.txt is all the same as train.txt.
+The label_num indexed 0 instead of 1. And the processing of val.txt is all the same as train.txt.
 
-### Convert Data Structure and Compute Mean
-Excute .\setup\BatBuilder.exe to build 5 .bat files:
+### Convert Data Structure
+Excute .\setup\BatBuilder.exe to build 3 .bat files:
 - convertimage2ldb_train.bat
 - convertimage2ldb_val.bat
-- computeMean_train.bat
-- computeMean_val.bat
 - Train.bat
 
-If the excution end without any problem, then excute convertimage2ldb_train.bat and convertimage2ldb_val.bat to get the LEVELDB structure train/val dataset in .\trainLevelDB and valLevelDB.
+If the excution end without any problem, then excute convertimage2ldb_train.bat and convertimage2ldb_val.bat to get the LEVELDB structure train/val dataset in .\trainLevelDB and .\valLevelDB.
 
 After data converting then excute computeMean_train.bat and computeMean_val.bat to the compute the mean of the dataset, the results will be saved in .\model as train_mean.binaryproto and val_mean.binaryproto
 
 ### Add Data to Net and Train
-We used Alex model, for model structure:
-![structure](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/deploy.bmp)
+We used a modified [Light-CNN](https://github.com/AlfredXiangWu/face_verification_experiment) for training. In order to reducing overfitting and accelerating convergence, this model will be very small. As the results, this toy model CANNOT be taken a serious use.
 
-Open .\model\train_val.prototxt to change the path (in line 13, 16, 32, 35 if your did not modify this file after download) and the same to .\model\solver.prototext.
-
-Change the parameters...
+Open .\model\train_val.prototxt to change the path and the same to .\model\solver.prototext.
 
 Check all the roots is filled correcttly, you can excute .\setup\Train.bat to train this net.
 
-After training, you will get caffemodel in the .\caffemodel saved like "lovelive_alexnet_train_iter_10000.caffemodel".
+After training, you will get caffemodel in the .\snapshot saved like "lovelive_lightcnn_train_iter_1000.caffemodel".
 
 ### Prediction/Recogition
 Open Prediction.py in the root, change the path you need. And just have fun...

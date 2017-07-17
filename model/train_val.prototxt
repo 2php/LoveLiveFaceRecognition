@@ -17,7 +17,7 @@ layer {
   }
   data_param {
     source: #"$(your_projectroot)/trainLevelDB"
-    batch_size: 128
+    batch_size: 64
     backend: LEVELDB
   }
 }
@@ -39,7 +39,7 @@ layer {
   }
   data_param {
     source: #"$(your_projectroot)/valLevelDB"
-    batch_size: 128
+    batch_size: 64
     backend: LEVELDB
   }
 }
@@ -55,7 +55,7 @@ layer{
     decay_mult: 0
   }
   convolution_param {
-	num_output: 96
+	num_output: 32
 	kernel_size: 5
 	stride: 1
 	pad: 2
@@ -115,9 +115,10 @@ layer{
     decay_mult: 0
   }
   convolution_param {
-	num_output: 96
-	kernel_size: 1
+	num_output: 32
+	kernel_size: 3
 	stride: 1
+	pad: 1
 	weight_filler {
 	  type: "xavier"
 	}
@@ -162,10 +163,9 @@ layer{
     decay_mult: 0
   }
   convolution_param {
-	num_output: 192
+	num_output: 64
 	kernel_size: 3
-	stride: 1
-	pad: 1
+	stride: 2
 	weight_filler {
 	  type: "xavier"
 	}
@@ -224,7 +224,7 @@ layer{
     decay_mult: 0
   }
   convolution_param {
-	num_output: 192
+	num_output: 64
 	kernel_size: 1
 	stride: 1
 	weight_filler {
@@ -271,10 +271,9 @@ layer{
     decay_mult: 0
   }
   convolution_param {
-	num_output: 384
+	num_output: 128
 	kernel_size: 3
 	stride: 1
-	pad: 1
 	weight_filler {
 	  type: "xavier"
 	}
@@ -332,7 +331,7 @@ layer{
     decay_mult: 0
   }
   convolution_param{
-    num_output: 384
+    num_output: 128
     kernel_size: 1
     stride: 1
     weight_filler{
@@ -378,10 +377,9 @@ layer{
     decay_mult: 0
   }
   convolution_param{
-    num_output: 256
-    kernel_size: 3
+    num_output: 96
+    kernel_size: 1
     stride: 1
-    pad: 1
     weight_filler{
       type:"xavier"
     }
@@ -429,8 +427,8 @@ layer{
     decay_mult: 0
   }
   convolution_param{
-    num_output: 256
-    kernel_size: 1
+    num_output: 96
+    kernel_size: 3
     stride: 1
     weight_filler{
       type:"xavier"
@@ -478,7 +476,6 @@ layer{
     num_output: 256
     kernel_size: 3
     stride: 1
-    pad: 1
     weight_filler{
       type:"xavier"
     }
@@ -490,8 +487,6 @@ layer{
   bottom: "eltwise5a"
   top: "conv5"
 }
-
-
 layer{
   name: "slice5"
   type:"Slice"
@@ -517,45 +512,21 @@ layer{
   name: "pool4"
   type: "Pooling"
   pooling_param {
-	pool: MAX
-	kernel_size: 2
-	stride: 2
+	pool: AVE
+	kernel_size: 3
+	stride: 3
   }
   bottom: "eltwise5"
   top: "pool4"
 }
 
 layer{
-  name: "fc1"
-  type: "InnerProduct"
-  param {
-    lr_mult: 1
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 2
-    decay_mult: 0
-  }
-  inner_product_param {
-	num_output: 512
-	weight_filler {
-	  type: "xavier"
-	}
-	bias_filler {
-	  type: "constant"
-	  value: 0.1
-	}	
-  }  
-  bottom: "pool4"
-  top: "fc1"
-}
-layer{
   name: "slice_fc1"
   type:"Slice"
   slice_param {
 	slice_dim: 1
   }
-  bottom: "fc1"
+  bottom: "pool4"
   top: "slice_fc1_1"
   top: "slice_fc1_2"
 }
@@ -605,4 +576,14 @@ layer {
   bottom: "fc2"
   bottom: "label"
   top: "softmax_loss"
+}
+layer {
+  name: "accuracy_top1"
+  type: "Accuracy"
+  bottom: "fc2"
+  bottom: "label"
+  top: "accuracy_top1"
+  include {
+    phase: TEST
+  }
 }

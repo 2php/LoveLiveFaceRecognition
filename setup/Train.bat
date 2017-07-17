@@ -1,2 +1,2 @@
-$(Your_caffe_root)\caffe.exe train --solver=D:\Research\LoveLiveFaceRecognition\model\solver.prototxt
+%CaffeRoot%\caffe.exe train --solver=$(your_projectroot)\model\solver.prototxt --gpu=1
 pause

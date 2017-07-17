@@ -1,0 +1,1952 @@
+Log file created at: 2017/07/18 03:31:31
+Running on machine: DESKTOP-R69EVJD
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0718 03:31:31.855206  7016 caffe.cpp:220] Using GPUs 1
+I0718 03:31:32.071254  7016 caffe.cpp:225] GPU 1: GeForce GTX TITAN X
+I0718 03:31:33.067404  7016 solver.cpp:48] Initializing solver from parameters: 
+test_iter: 3
+test_interval: 100
+base_lr: 0.01
+display: 20
+max_iter: 500
+lr_policy: "multistep"
+gamma: 0.2
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 100
+snapshot_prefix: "D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train"
+solver_mode: GPU
+device_id: 1
+net: "D:/Research/LoveLiveFaceRecognition/model/train_val.prototxt"
+train_state {
+  level: 0
+  stage: ""
+}
+test_initialization: false
+stepvalue: 400
+I0718 03:31:33.067931  7016 solver.cpp:92] Creating training net from net file: D:/Research/LoveLiveFaceRecognition/model/train_val.prototxt
+I0718 03:31:33.068907  7016 net.cpp:344] The NetState phase (0) differed from the phase (1) specified by a rule in layer data
+I0718 03:31:33.068907  7016 net.cpp:344] The NetState phase (0) differed from the phase (1) specified by a rule in layer accuracy_top1
+I0718 03:31:33.069409  7016 net.cpp:76] Initializing net from parameters: 
+name: "LLFace"
+state {
+  phase: TRAIN
+  level: 0
+  stage: ""
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.0078125
+    mirror: true
+    crop_size: 128
+    mean_value: 104
+    mean_value: 117
+    mean_value: 124
+  }
+  data_param {
+    source: "D:/Research/LoveLiveFaceRecognition/trainLevelDB"
+    batch_size: 64
+    backend: LEVELDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice1"
+  type: "Slice"
+  bottom: "conv1"
+  top: "slice1_1"
+  top: "slice1_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise1"
+  type: "Eltwise"
+  bottom: "slice1_1"
+  bottom: "slice1_2"
+  top: "eltwise1"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "eltwise1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2a"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice2a"
+  type: "Slice"
+  bottom: "conv2a"
+  top: "slice2a_1"
+  top: "slice2a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise2a"
+  type: "Eltwise"
+  bottom: "slice2a_1"
+  bottom: "slice2a_2"
+  top: "eltwise2a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "eltwise2a"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice2"
+  type: "Slice"
+  bottom: "conv2"
+  top: "slice2_1"
+  top: "slice2_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise2"
+  type: "Eltwise"
+  bottom: "slice2_1"
+  bottom: "slice2_2"
+  top: "eltwise2"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "eltwise2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv3a"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice3a"
+  type: "Slice"
+  bottom: "conv3a"
+  top: "slice3a_1"
+  top: "slice3a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise3a"
+  type: "Eltwise"
+  bottom: "slice3a_1"
+  bottom: "slice3a_2"
+  top: "eltwise3a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "eltwise3a"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice3"
+  type: "Slice"
+  bottom: "conv3"
+  top: "slice3_1"
+  top: "slice3_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise3"
+  type: "Eltwise"
+  bottom: "slice3_1"
+  bottom: "slice3_2"
+  top: "eltwise3"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool3"
+  type: "Pooling"
+  bottom: "eltwise3"
+  top: "pool3"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv4a"
+  type: "Convolution"
+  bottom: "pool3"
+  top: "conv4a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice4a"
+  type: "Slice"
+  bottom: "conv4a"
+  top: "slice4a_1"
+  top: "slice4a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise4a"
+  type: "Eltwise"
+  bottom: "slice4a_1"
+  bottom: "slice4a_2"
+  top: "eltwise4a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "eltwise4a"
+  top: "conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice4"
+  type: "Slice"
+  bottom: "conv4"
+  top: "slice4_1"
+  top: "slice4_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise4"
+  type: "Eltwise"
+  bottom: "slice4_1"
+  bottom: "slice4_2"
+  top: "eltwise4"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv5a"
+  type: "Convolution"
+  bottom: "eltwise4"
+  top: "conv5a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice5a"
+  type: "Slice"
+  bottom: "conv5a"
+  top: "slice5a_1"
+  top: "slice5a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise5a"
+  type: "Eltwise"
+  bottom: "slice5a_1"
+  bottom: "slice5a_2"
+  top: "eltwise5a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "eltwise5a"
+  top: "conv5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice5"
+  type: "Slice"
+  bottom: "conv5"
+  top: "slice5_1"
+  top: "slice5_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise5"
+  type: "Eltwise"
+  bottom: "slice5_1"
+  bottom: "slice5_2"
+  top: "eltwise5"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool4"
+  type: "Pooling"
+  bottom: "eltwise5"
+  top: "pool4"
+  pooling_param {
+    pool: AVE
+    kernel_size: 3
+    stride: 3
+  }
+}
+layer {
+  name: "slice_fc1"
+  type: "Slice"
+  bottom: "pool4"
+  top: "slice_fc1_1"
+  top: "slice_fc1_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise_fc1"
+  type: "Eltwise"
+  bottom: "slice_fc1_1"
+  bottom: "slice_fc1_2"
+  top: "eltwise_fc1"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "drop1"
+  type: "Dropout"
+  bottom: "eltwise_fc1"
+  top: "eltwise_fc1"
+  dropout_param {
+    dropout_ratio: 0.7
+  }
+}
+layer {
+  name: "fc2"
+  type: "InnerProduct"
+  bottom: "eltwise_fc1"
+  top: "fc2"
+  inner_product_param {
+    num_output: 9
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "softmax_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc2"
+  bottom: "label"
+  top: "softmax_loss"
+}
+I0718 03:31:33.070412  7016 layer_factory.hpp:77] Creating layer data
+I0718 03:31:33.070912  7016 net.cpp:119] Creating Layer data
+I0718 03:31:33.070912  7016 net.cpp:432] data -> data
+I0718 03:31:33.071415  7016 net.cpp:432] data -> label
+I0718 03:31:33.075927 15080 db_leveldb.cpp:18] Opened leveldb D:/Research/LoveLiveFaceRecognition/trainLevelDB
+I0718 03:31:33.111547  7016 data_layer.cpp:41] output data size: 64,3,128,128
+I0718 03:31:33.132076  7016 net.cpp:170] Setting up data
+I0718 03:31:33.132076  7016 net.cpp:177] Top shape: 64 3 128 128 (3145728)
+I0718 03:31:33.133607  7016 net.cpp:177] Top shape: 64 (64)
+I0718 03:31:33.133607  7016 net.cpp:185] Memory required for data: 12583168
+I0718 03:31:33.133607  7016 layer_factory.hpp:77] Creating layer conv1
+I0718 03:31:33.134080  7016 net.cpp:119] Creating Layer conv1
+I0718 03:31:33.134080  7016 net.cpp:458] conv1 <- data
+I0718 03:31:33.134583  7016 net.cpp:432] conv1 -> conv1
+I0718 03:31:34.151285  7016 net.cpp:170] Setting up conv1
+I0718 03:31:34.151285  7016 net.cpp:177] Top shape: 64 32 128 128 (33554432)
+I0718 03:31:34.152290  7016 net.cpp:185] Memory required for data: 146800896
+I0718 03:31:34.152791  7016 layer_factory.hpp:77] Creating layer slice1
+I0718 03:31:34.152791  7016 net.cpp:119] Creating Layer slice1
+I0718 03:31:34.152791  7016 net.cpp:458] slice1 <- conv1
+I0718 03:31:34.153292  7016 net.cpp:432] slice1 -> slice1_1
+I0718 03:31:34.153794  7016 net.cpp:432] slice1 -> slice1_2
+I0718 03:31:34.153794  7016 net.cpp:170] Setting up slice1
+I0718 03:31:34.154294  7016 net.cpp:177] Top shape: 64 16 128 128 (16777216)
+I0718 03:31:34.154294  7016 net.cpp:177] Top shape: 64 16 128 128 (16777216)
+I0718 03:31:34.154795  7016 net.cpp:185] Memory required for data: 281018624
+I0718 03:31:34.154795  7016 layer_factory.hpp:77] Creating layer etlwise1
+I0718 03:31:34.155297  7016 net.cpp:119] Creating Layer etlwise1
+I0718 03:31:34.155297  7016 net.cpp:458] etlwise1 <- slice1_1
+I0718 03:31:34.155798  7016 net.cpp:458] etlwise1 <- slice1_2
+I0718 03:31:34.155798  7016 net.cpp:432] etlwise1 -> eltwise1
+I0718 03:31:34.156299  7016 net.cpp:170] Setting up etlwise1
+I0718 03:31:34.156299  7016 net.cpp:177] Top shape: 64 16 128 128 (16777216)
+I0718 03:31:34.156299  7016 net.cpp:185] Memory required for data: 348127488
+I0718 03:31:34.156800  7016 layer_factory.hpp:77] Creating layer pool1
+I0718 03:31:34.156800  7016 net.cpp:119] Creating Layer pool1
+I0718 03:31:34.157301  7016 net.cpp:458] pool1 <- eltwise1
+I0718 03:31:34.157301  7016 net.cpp:432] pool1 -> pool1
+I0718 03:31:34.157804  7016 net.cpp:170] Setting up pool1
+I0718 03:31:34.157804  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.158305  7016 net.cpp:185] Memory required for data: 364904704
+I0718 03:31:34.158305  7016 layer_factory.hpp:77] Creating layer conv2a
+I0718 03:31:34.158805  7016 net.cpp:119] Creating Layer conv2a
+I0718 03:31:34.158805  7016 net.cpp:458] conv2a <- pool1
+I0718 03:31:34.159307  7016 net.cpp:432] conv2a -> conv2a
+I0718 03:31:34.161814  7016 net.cpp:170] Setting up conv2a
+I0718 03:31:34.161814  7016 net.cpp:177] Top shape: 64 32 64 64 (8388608)
+I0718 03:31:34.162315  7016 net.cpp:185] Memory required for data: 398459136
+I0718 03:31:34.162817  7016 layer_factory.hpp:77] Creating layer slice2a
+I0718 03:31:34.162817  7016 net.cpp:119] Creating Layer slice2a
+I0718 03:31:34.162817  7016 net.cpp:458] slice2a <- conv2a
+I0718 03:31:34.163317  7016 net.cpp:432] slice2a -> slice2a_1
+I0718 03:31:34.163820  7016 net.cpp:432] slice2a -> slice2a_2
+I0718 03:31:34.163820  7016 net.cpp:170] Setting up slice2a
+I0718 03:31:34.164321  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.164321  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.164321  7016 net.cpp:185] Memory required for data: 432013568
+I0718 03:31:34.164321  7016 layer_factory.hpp:77] Creating layer etlwise2a
+I0718 03:31:34.164822  7016 net.cpp:119] Creating Layer etlwise2a
+I0718 03:31:34.164822  7016 net.cpp:458] etlwise2a <- slice2a_1
+I0718 03:31:34.165324  7016 net.cpp:458] etlwise2a <- slice2a_2
+I0718 03:31:34.165324  7016 net.cpp:432] etlwise2a -> eltwise2a
+I0718 03:31:34.165824  7016 net.cpp:170] Setting up etlwise2a
+I0718 03:31:34.165824  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.166326  7016 net.cpp:185] Memory required for data: 448790784
+I0718 03:31:34.166827  7016 layer_factory.hpp:77] Creating layer conv2
+I0718 03:31:34.166827  7016 net.cpp:119] Creating Layer conv2
+I0718 03:31:34.166827  7016 net.cpp:458] conv2 <- eltwise2a
+I0718 03:31:34.167330  7016 net.cpp:432] conv2 -> conv2
+I0718 03:31:34.170337  7016 net.cpp:170] Setting up conv2
+I0718 03:31:34.170840  7016 net.cpp:177] Top shape: 64 64 31 31 (3936256)
+I0718 03:31:34.171339  7016 net.cpp:185] Memory required for data: 464535808
+I0718 03:31:34.171339  7016 layer_factory.hpp:77] Creating layer slice2
+I0718 03:31:34.171840  7016 net.cpp:119] Creating Layer slice2
+I0718 03:31:34.171840  7016 net.cpp:458] slice2 <- conv2
+I0718 03:31:34.171840  7016 net.cpp:432] slice2 -> slice2_1
+I0718 03:31:34.172343  7016 net.cpp:432] slice2 -> slice2_2
+I0718 03:31:34.172343  7016 net.cpp:170] Setting up slice2
+I0718 03:31:34.172843  7016 net.cpp:177] Top shape: 64 32 31 31 (1968128)
+I0718 03:31:34.172843  7016 net.cpp:177] Top shape: 64 32 31 31 (1968128)
+I0718 03:31:34.172843  7016 net.cpp:185] Memory required for data: 480280832
+I0718 03:31:34.173344  7016 layer_factory.hpp:77] Creating layer etlwise2
+I0718 03:31:34.173344  7016 net.cpp:119] Creating Layer etlwise2
+I0718 03:31:34.173846  7016 net.cpp:458] etlwise2 <- slice2_1
+I0718 03:31:34.173846  7016 net.cpp:458] etlwise2 <- slice2_2
+I0718 03:31:34.173846  7016 net.cpp:432] etlwise2 -> eltwise2
+I0718 03:31:34.174347  7016 net.cpp:170] Setting up etlwise2
+I0718 03:31:34.174849  7016 net.cpp:177] Top shape: 64 32 31 31 (1968128)
+I0718 03:31:34.174849  7016 net.cpp:185] Memory required for data: 488153344
+I0718 03:31:34.174849  7016 layer_factory.hpp:77] Creating layer pool2
+I0718 03:31:34.175350  7016 net.cpp:119] Creating Layer pool2
+I0718 03:31:34.175350  7016 net.cpp:458] pool2 <- eltwise2
+I0718 03:31:34.175350  7016 net.cpp:432] pool2 -> pool2
+I0718 03:31:34.175853  7016 net.cpp:170] Setting up pool2
+I0718 03:31:34.175853  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.175853  7016 net.cpp:185] Memory required for data: 490250496
+I0718 03:31:34.176353  7016 layer_factory.hpp:77] Creating layer conv3a
+I0718 03:31:34.176353  7016 net.cpp:119] Creating Layer conv3a
+I0718 03:31:34.176353  7016 net.cpp:458] conv3a <- pool2
+I0718 03:31:34.176353  7016 net.cpp:432] conv3a -> conv3a
+I0718 03:31:34.178859  7016 net.cpp:170] Setting up conv3a
+I0718 03:31:34.178859  7016 net.cpp:177] Top shape: 64 64 16 16 (1048576)
+I0718 03:31:34.179862  7016 net.cpp:185] Memory required for data: 494444800
+I0718 03:31:34.180363  7016 layer_factory.hpp:77] Creating layer slice3a
+I0718 03:31:34.180865  7016 net.cpp:119] Creating Layer slice3a
+I0718 03:31:34.180865  7016 net.cpp:458] slice3a <- conv3a
+I0718 03:31:34.181365  7016 net.cpp:432] slice3a -> slice3a_1
+I0718 03:31:34.181365  7016 net.cpp:432] slice3a -> slice3a_2
+I0718 03:31:34.181365  7016 net.cpp:170] Setting up slice3a
+I0718 03:31:34.181866  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.181866  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.182368  7016 net.cpp:185] Memory required for data: 498639104
+I0718 03:31:34.182368  7016 layer_factory.hpp:77] Creating layer etlwise3a
+I0718 03:31:34.182869  7016 net.cpp:119] Creating Layer etlwise3a
+I0718 03:31:34.182869  7016 net.cpp:458] etlwise3a <- slice3a_1
+I0718 03:31:34.183372  7016 net.cpp:458] etlwise3a <- slice3a_2
+I0718 03:31:34.183372  7016 net.cpp:432] etlwise3a -> eltwise3a
+I0718 03:31:34.183872  7016 net.cpp:170] Setting up etlwise3a
+I0718 03:31:34.183872  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.183872  7016 net.cpp:185] Memory required for data: 500736256
+I0718 03:31:34.184373  7016 layer_factory.hpp:77] Creating layer conv3
+I0718 03:31:34.184373  7016 net.cpp:119] Creating Layer conv3
+I0718 03:31:34.184875  7016 net.cpp:458] conv3 <- eltwise3a
+I0718 03:31:34.184875  7016 net.cpp:432] conv3 -> conv3
+I0718 03:31:34.187381  7016 net.cpp:170] Setting up conv3
+I0718 03:31:34.187381  7016 net.cpp:177] Top shape: 64 128 14 14 (1605632)
+I0718 03:31:34.187381  7016 net.cpp:185] Memory required for data: 507158784
+I0718 03:31:34.187883  7016 layer_factory.hpp:77] Creating layer slice3
+I0718 03:31:34.187883  7016 net.cpp:119] Creating Layer slice3
+I0718 03:31:34.188385  7016 net.cpp:458] slice3 <- conv3
+I0718 03:31:34.188886  7016 net.cpp:432] slice3 -> slice3_1
+I0718 03:31:34.261580  7016 net.cpp:432] slice3 -> slice3_2
+I0718 03:31:34.262080  7016 net.cpp:170] Setting up slice3
+I0718 03:31:34.262080  7016 net.cpp:177] Top shape: 64 64 14 14 (802816)
+I0718 03:31:34.262583  7016 net.cpp:177] Top shape: 64 64 14 14 (802816)
+I0718 03:31:34.262583  7016 net.cpp:185] Memory required for data: 513581312
+I0718 03:31:34.262583  7016 layer_factory.hpp:77] Creating layer etlwise3
+I0718 03:31:34.263083  7016 net.cpp:119] Creating Layer etlwise3
+I0718 03:31:34.263586  7016 net.cpp:458] etlwise3 <- slice3_1
+I0718 03:31:34.263586  7016 net.cpp:458] etlwise3 <- slice3_2
+I0718 03:31:34.263586  7016 net.cpp:432] etlwise3 -> eltwise3
+I0718 03:31:34.264086  7016 net.cpp:170] Setting up etlwise3
+I0718 03:31:34.264086  7016 net.cpp:177] Top shape: 64 64 14 14 (802816)
+I0718 03:31:34.264587  7016 net.cpp:185] Memory required for data: 516792576
+I0718 03:31:34.264587  7016 layer_factory.hpp:77] Creating layer pool3
+I0718 03:31:34.265089  7016 net.cpp:119] Creating Layer pool3
+I0718 03:31:34.265089  7016 net.cpp:458] pool3 <- eltwise3
+I0718 03:31:34.265590  7016 net.cpp:432] pool3 -> pool3
+I0718 03:31:34.265590  7016 net.cpp:170] Setting up pool3
+I0718 03:31:34.265590  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.266093  7016 net.cpp:185] Memory required for data: 517595392
+I0718 03:31:34.266093  7016 layer_factory.hpp:77] Creating layer conv4a
+I0718 03:31:34.266593  7016 net.cpp:119] Creating Layer conv4a
+I0718 03:31:34.266593  7016 net.cpp:458] conv4a <- pool3
+I0718 03:31:34.267094  7016 net.cpp:432] conv4a -> conv4a
+I0718 03:31:34.270103  7016 net.cpp:170] Setting up conv4a
+I0718 03:31:34.271107  7016 net.cpp:177] Top shape: 64 128 7 7 (401408)
+I0718 03:31:34.271606  7016 net.cpp:185] Memory required for data: 519201024
+I0718 03:31:34.273113  7016 layer_factory.hpp:77] Creating layer slice4a
+I0718 03:31:34.273613  7016 net.cpp:119] Creating Layer slice4a
+I0718 03:31:34.274116  7016 net.cpp:458] slice4a <- conv4a
+I0718 03:31:34.274616  7016 net.cpp:432] slice4a -> slice4a_1
+I0718 03:31:34.275117  7016 net.cpp:432] slice4a -> slice4a_2
+I0718 03:31:34.276120  7016 net.cpp:170] Setting up slice4a
+I0718 03:31:34.276620  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.277122  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.277623  7016 net.cpp:185] Memory required for data: 520806656
+I0718 03:31:34.278126  7016 layer_factory.hpp:77] Creating layer etlwise4a
+I0718 03:31:34.278626  7016 net.cpp:119] Creating Layer etlwise4a
+I0718 03:31:34.279127  7016 net.cpp:458] etlwise4a <- slice4a_1
+I0718 03:31:34.279628  7016 net.cpp:458] etlwise4a <- slice4a_2
+I0718 03:31:34.280632  7016 net.cpp:432] etlwise4a -> eltwise4a
+I0718 03:31:34.281133  7016 net.cpp:170] Setting up etlwise4a
+I0718 03:31:34.281635  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.282135  7016 net.cpp:185] Memory required for data: 521609472
+I0718 03:31:34.282637  7016 layer_factory.hpp:77] Creating layer conv4
+I0718 03:31:34.283136  7016 net.cpp:119] Creating Layer conv4
+I0718 03:31:34.283638  7016 net.cpp:458] conv4 <- eltwise4a
+I0718 03:31:34.284643  7016 net.cpp:432] conv4 -> conv4
+I0718 03:31:34.287650  7016 net.cpp:170] Setting up conv4
+I0718 03:31:34.287650  7016 net.cpp:177] Top shape: 64 96 7 7 (301056)
+I0718 03:31:34.288651  7016 net.cpp:185] Memory required for data: 522813696
+I0718 03:31:34.289656  7016 layer_factory.hpp:77] Creating layer slice4
+I0718 03:31:34.290659  7016 net.cpp:119] Creating Layer slice4
+I0718 03:31:34.291159  7016 net.cpp:458] slice4 <- conv4
+I0718 03:31:34.291661  7016 net.cpp:432] slice4 -> slice4_1
+I0718 03:31:34.292162  7016 net.cpp:432] slice4 -> slice4_2
+I0718 03:31:34.292662  7016 net.cpp:170] Setting up slice4
+I0718 03:31:34.293164  7016 net.cpp:177] Top shape: 64 48 7 7 (150528)
+I0718 03:31:34.293666  7016 net.cpp:177] Top shape: 64 48 7 7 (150528)
+I0718 03:31:34.294167  7016 net.cpp:185] Memory required for data: 524017920
+I0718 03:31:34.294669  7016 layer_factory.hpp:77] Creating layer etlwise4
+I0718 03:31:34.295171  7016 net.cpp:119] Creating Layer etlwise4
+I0718 03:31:34.295671  7016 net.cpp:458] etlwise4 <- slice4_1
+I0718 03:31:34.296174  7016 net.cpp:458] etlwise4 <- slice4_2
+I0718 03:31:34.296674  7016 net.cpp:432] etlwise4 -> eltwise4
+I0718 03:31:34.297175  7016 net.cpp:170] Setting up etlwise4
+I0718 03:31:34.297677  7016 net.cpp:177] Top shape: 64 48 7 7 (150528)
+I0718 03:31:34.297677  7016 net.cpp:185] Memory required for data: 524620032
+I0718 03:31:34.297677  7016 layer_factory.hpp:77] Creating layer conv5a
+I0718 03:31:34.297677  7016 net.cpp:119] Creating Layer conv5a
+I0718 03:31:34.298177  7016 net.cpp:458] conv5a <- eltwise4
+I0718 03:31:34.298177  7016 net.cpp:432] conv5a -> conv5a
+I0718 03:31:34.300684  7016 net.cpp:170] Setting up conv5a
+I0718 03:31:34.300684  7016 net.cpp:177] Top shape: 64 96 5 5 (153600)
+I0718 03:31:34.301184  7016 net.cpp:185] Memory required for data: 525234432
+I0718 03:31:34.301687  7016 layer_factory.hpp:77] Creating layer slice5a
+I0718 03:31:34.301687  7016 net.cpp:119] Creating Layer slice5a
+I0718 03:31:34.302187  7016 net.cpp:458] slice5a <- conv5a
+I0718 03:31:34.302187  7016 net.cpp:432] slice5a -> slice5a_1
+I0718 03:31:34.302688  7016 net.cpp:432] slice5a -> slice5a_2
+I0718 03:31:34.302688  7016 net.cpp:170] Setting up slice5a
+I0718 03:31:34.303189  7016 net.cpp:177] Top shape: 64 48 5 5 (76800)
+I0718 03:31:34.303189  7016 net.cpp:177] Top shape: 64 48 5 5 (76800)
+I0718 03:31:34.303691  7016 net.cpp:185] Memory required for data: 525848832
+I0718 03:31:34.303691  7016 layer_factory.hpp:77] Creating layer etlwise5a
+I0718 03:31:34.304193  7016 net.cpp:119] Creating Layer etlwise5a
+I0718 03:31:34.304193  7016 net.cpp:458] etlwise5a <- slice5a_1
+I0718 03:31:34.304693  7016 net.cpp:458] etlwise5a <- slice5a_2
+I0718 03:31:34.304693  7016 net.cpp:432] etlwise5a -> eltwise5a
+I0718 03:31:34.304693  7016 net.cpp:170] Setting up etlwise5a
+I0718 03:31:34.305196  7016 net.cpp:177] Top shape: 64 48 5 5 (76800)
+I0718 03:31:34.305697  7016 net.cpp:185] Memory required for data: 526156032
+I0718 03:31:34.305697  7016 layer_factory.hpp:77] Creating layer conv5
+I0718 03:31:34.306197  7016 net.cpp:119] Creating Layer conv5
+I0718 03:31:34.306197  7016 net.cpp:458] conv5 <- eltwise5a
+I0718 03:31:34.306699  7016 net.cpp:432] conv5 -> conv5
+I0718 03:31:34.309232  7016 net.cpp:170] Setting up conv5
+I0718 03:31:34.309232  7016 net.cpp:177] Top shape: 64 256 3 3 (147456)
+I0718 03:31:34.309707  7016 net.cpp:185] Memory required for data: 526745856
+I0718 03:31:34.309707  7016 layer_factory.hpp:77] Creating layer slice5
+I0718 03:31:34.310209  7016 net.cpp:119] Creating Layer slice5
+I0718 03:31:34.310209  7016 net.cpp:458] slice5 <- conv5
+I0718 03:31:34.310710  7016 net.cpp:432] slice5 -> slice5_1
+I0718 03:31:34.311213  7016 net.cpp:432] slice5 -> slice5_2
+I0718 03:31:34.311213  7016 net.cpp:170] Setting up slice5
+I0718 03:31:34.311712  7016 net.cpp:177] Top shape: 64 128 3 3 (73728)
+I0718 03:31:34.311712  7016 net.cpp:177] Top shape: 64 128 3 3 (73728)
+I0718 03:31:34.311712  7016 net.cpp:185] Memory required for data: 527335680
+I0718 03:31:34.312214  7016 layer_factory.hpp:77] Creating layer etlwise5
+I0718 03:31:34.312214  7016 net.cpp:119] Creating Layer etlwise5
+I0718 03:31:34.312214  7016 net.cpp:458] etlwise5 <- slice5_1
+I0718 03:31:34.312716  7016 net.cpp:458] etlwise5 <- slice5_2
+I0718 03:31:34.312716  7016 net.cpp:432] etlwise5 -> eltwise5
+I0718 03:31:34.313216  7016 net.cpp:170] Setting up etlwise5
+I0718 03:31:34.313216  7016 net.cpp:177] Top shape: 64 128 3 3 (73728)
+I0718 03:31:34.313719  7016 net.cpp:185] Memory required for data: 527630592
+I0718 03:31:34.313719  7016 layer_factory.hpp:77] Creating layer pool4
+I0718 03:31:34.314220  7016 net.cpp:119] Creating Layer pool4
+I0718 03:31:34.314220  7016 net.cpp:458] pool4 <- eltwise5
+I0718 03:31:34.314721  7016 net.cpp:432] pool4 -> pool4
+I0718 03:31:34.315222  7016 net.cpp:170] Setting up pool4
+I0718 03:31:34.315222  7016 net.cpp:177] Top shape: 64 128 1 1 (8192)
+I0718 03:31:34.315222  7016 net.cpp:185] Memory required for data: 527663360
+I0718 03:31:34.315723  7016 layer_factory.hpp:77] Creating layer slice_fc1
+I0718 03:31:34.315723  7016 net.cpp:119] Creating Layer slice_fc1
+I0718 03:31:34.316226  7016 net.cpp:458] slice_fc1 <- pool4
+I0718 03:31:34.316226  7016 net.cpp:432] slice_fc1 -> slice_fc1_1
+I0718 03:31:34.316726  7016 net.cpp:432] slice_fc1 -> slice_fc1_2
+I0718 03:31:34.317729  7016 net.cpp:170] Setting up slice_fc1
+I0718 03:31:34.317729  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.318230  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.318230  7016 net.cpp:185] Memory required for data: 527696128
+I0718 03:31:34.318230  7016 layer_factory.hpp:77] Creating layer etlwise_fc1
+I0718 03:31:34.318732  7016 net.cpp:119] Creating Layer etlwise_fc1
+I0718 03:31:34.318732  7016 net.cpp:458] etlwise_fc1 <- slice_fc1_1
+I0718 03:31:34.319232  7016 net.cpp:458] etlwise_fc1 <- slice_fc1_2
+I0718 03:31:34.319232  7016 net.cpp:432] etlwise_fc1 -> eltwise_fc1
+I0718 03:31:34.319733  7016 net.cpp:170] Setting up etlwise_fc1
+I0718 03:31:34.319733  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.320235  7016 net.cpp:185] Memory required for data: 527712512
+I0718 03:31:34.320235  7016 layer_factory.hpp:77] Creating layer drop1
+I0718 03:31:34.320737  7016 net.cpp:119] Creating Layer drop1
+I0718 03:31:34.320737  7016 net.cpp:458] drop1 <- eltwise_fc1
+I0718 03:31:34.320737  7016 net.cpp:417] drop1 -> eltwise_fc1 (in-place)
+I0718 03:31:34.321238  7016 net.cpp:170] Setting up drop1
+I0718 03:31:34.321238  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.321740  7016 net.cpp:185] Memory required for data: 527728896
+I0718 03:31:34.321740  7016 layer_factory.hpp:77] Creating layer fc2
+I0718 03:31:34.322242  7016 net.cpp:119] Creating Layer fc2
+I0718 03:31:34.322242  7016 net.cpp:458] fc2 <- eltwise_fc1
+I0718 03:31:34.322742  7016 net.cpp:432] fc2 -> fc2
+I0718 03:31:34.322742  7016 net.cpp:170] Setting up fc2
+I0718 03:31:34.322742  7016 net.cpp:177] Top shape: 64 9 (576)
+I0718 03:31:34.323245  7016 net.cpp:185] Memory required for data: 527731200
+I0718 03:31:34.323245  7016 layer_factory.hpp:77] Creating layer softmax_loss
+I0718 03:31:34.323745  7016 net.cpp:119] Creating Layer softmax_loss
+I0718 03:31:34.323745  7016 net.cpp:458] softmax_loss <- fc2
+I0718 03:31:34.324246  7016 net.cpp:458] softmax_loss <- label
+I0718 03:31:34.324246  7016 net.cpp:432] softmax_loss -> softmax_loss
+I0718 03:31:34.324748  7016 layer_factory.hpp:77] Creating layer softmax_loss
+I0718 03:31:34.325750  7016 net.cpp:170] Setting up softmax_loss
+I0718 03:31:34.326252  7016 net.cpp:177] Top shape: (1)
+I0718 03:31:34.326252  7016 net.cpp:180]     with loss weight 1
+I0718 03:31:34.326752  7016 net.cpp:185] Memory required for data: 527731204
+I0718 03:31:34.326752  7016 net.cpp:246] softmax_loss needs backward computation.
+I0718 03:31:34.327255  7016 net.cpp:246] fc2 needs backward computation.
+I0718 03:31:34.327255  7016 net.cpp:246] drop1 needs backward computation.
+I0718 03:31:34.327756  7016 net.cpp:246] etlwise_fc1 needs backward computation.
+I0718 03:31:34.327756  7016 net.cpp:246] slice_fc1 needs backward computation.
+I0718 03:31:34.328258  7016 net.cpp:246] pool4 needs backward computation.
+I0718 03:31:34.328258  7016 net.cpp:246] etlwise5 needs backward computation.
+I0718 03:31:34.328258  7016 net.cpp:246] slice5 needs backward computation.
+I0718 03:31:34.328758  7016 net.cpp:246] conv5 needs backward computation.
+I0718 03:31:34.328758  7016 net.cpp:246] etlwise5a needs backward computation.
+I0718 03:31:34.329260  7016 net.cpp:246] slice5a needs backward computation.
+I0718 03:31:34.329260  7016 net.cpp:246] conv5a needs backward computation.
+I0718 03:31:34.329761  7016 net.cpp:246] etlwise4 needs backward computation.
+I0718 03:31:34.329761  7016 net.cpp:246] slice4 needs backward computation.
+I0718 03:31:34.330262  7016 net.cpp:246] conv4 needs backward computation.
+I0718 03:31:34.330262  7016 net.cpp:246] etlwise4a needs backward computation.
+I0718 03:31:34.330763  7016 net.cpp:246] slice4a needs backward computation.
+I0718 03:31:34.330763  7016 net.cpp:246] conv4a needs backward computation.
+I0718 03:31:34.330763  7016 net.cpp:246] pool3 needs backward computation.
+I0718 03:31:34.331265  7016 net.cpp:246] etlwise3 needs backward computation.
+I0718 03:31:34.331265  7016 net.cpp:246] slice3 needs backward computation.
+I0718 03:31:34.331766  7016 net.cpp:246] conv3 needs backward computation.
+I0718 03:31:34.331766  7016 net.cpp:246] etlwise3a needs backward computation.
+I0718 03:31:34.332267  7016 net.cpp:246] slice3a needs backward computation.
+I0718 03:31:34.332267  7016 net.cpp:246] conv3a needs backward computation.
+I0718 03:31:34.332769  7016 net.cpp:246] pool2 needs backward computation.
+I0718 03:31:34.332769  7016 net.cpp:246] etlwise2 needs backward computation.
+I0718 03:31:34.332769  7016 net.cpp:246] slice2 needs backward computation.
+I0718 03:31:34.333271  7016 net.cpp:246] conv2 needs backward computation.
+I0718 03:31:34.333772  7016 net.cpp:246] etlwise2a needs backward computation.
+I0718 03:31:34.333772  7016 net.cpp:246] slice2a needs backward computation.
+I0718 03:31:34.334272  7016 net.cpp:246] conv2a needs backward computation.
+I0718 03:31:34.334272  7016 net.cpp:246] pool1 needs backward computation.
+I0718 03:31:34.335276  7016 net.cpp:246] etlwise1 needs backward computation.
+I0718 03:31:34.335276  7016 net.cpp:246] slice1 needs backward computation.
+I0718 03:31:34.335777  7016 net.cpp:246] conv1 needs backward computation.
+I0718 03:31:34.335777  7016 net.cpp:249] data does not need backward computation.
+I0718 03:31:34.336278  7016 net.cpp:292] This network produces output softmax_loss
+I0718 03:31:34.336278  7016 net.cpp:305] Network initialization done.
+I0718 03:31:34.337280  7016 solver.cpp:184] Creating test net (#0) specified by net file: D:/Research/LoveLiveFaceRecognition/model/train_val.prototxt
+I0718 03:31:34.337280  7016 net.cpp:344] The NetState phase (1) differed from the phase (0) specified by a rule in layer data
+I0718 03:31:34.337280  7016 net.cpp:76] Initializing net from parameters: 
+name: "LLFace"
+state {
+  phase: TEST
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.0078125
+    mirror: true
+    crop_size: 128
+    mean_value: 104
+    mean_value: 117
+    mean_value: 124
+  }
+  data_param {
+    source: "D:/Research/LoveLiveFaceRecognition/valLevelDB"
+    batch_size: 64
+    backend: LEVELDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice1"
+  type: "Slice"
+  bottom: "conv1"
+  top: "slice1_1"
+  top: "slice1_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise1"
+  type: "Eltwise"
+  bottom: "slice1_1"
+  bottom: "slice1_2"
+  top: "eltwise1"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "eltwise1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2a"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice2a"
+  type: "Slice"
+  bottom: "conv2a"
+  top: "slice2a_1"
+  top: "slice2a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise2a"
+  type: "Eltwise"
+  bottom: "slice2a_1"
+  bottom: "slice2a_2"
+  top: "eltwise2a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "eltwise2a"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice2"
+  type: "Slice"
+  bottom: "conv2"
+  top: "slice2_1"
+  top: "slice2_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise2"
+  type: "Eltwise"
+  bottom: "slice2_1"
+  bottom: "slice2_2"
+  top: "eltwise2"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "eltwise2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv3a"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice3a"
+  type: "Slice"
+  bottom: "conv3a"
+  top: "slice3a_1"
+  top: "slice3a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise3a"
+  type: "Eltwise"
+  bottom: "slice3a_1"
+  bottom: "slice3a_2"
+  top: "eltwise3a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "eltwise3a"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice3"
+  type: "Slice"
+  bottom: "conv3"
+  top: "slice3_1"
+  top: "slice3_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise3"
+  type: "Eltwise"
+  bottom: "slice3_1"
+  bottom: "slice3_2"
+  top: "eltwise3"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool3"
+  type: "Pooling"
+  bottom: "eltwise3"
+  top: "pool3"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv4a"
+  type: "Convolution"
+  bottom: "pool3"
+  top: "conv4a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice4a"
+  type: "Slice"
+  bottom: "conv4a"
+  top: "slice4a_1"
+  top: "slice4a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise4a"
+  type: "Eltwise"
+  bottom: "slice4a_1"
+  bottom: "slice4a_2"
+  top: "eltwise4a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "eltwise4a"
+  top: "conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice4"
+  type: "Slice"
+  bottom: "conv4"
+  top: "slice4_1"
+  top: "slice4_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise4"
+  type: "Eltwise"
+  bottom: "slice4_1"
+  bottom: "slice4_2"
+  top: "eltwise4"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv5a"
+  type: "Convolution"
+  bottom: "eltwise4"
+  top: "conv5a"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice5a"
+  type: "Slice"
+  bottom: "conv5a"
+  top: "slice5a_1"
+  top: "slice5a_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise5a"
+  type: "Eltwise"
+  bottom: "slice5a_1"
+  bottom: "slice5a_2"
+  top: "eltwise5a"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "eltwise5a"
+  top: "conv5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "slice5"
+  type: "Slice"
+  bottom: "conv5"
+  top: "slice5_1"
+  top: "slice5_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise5"
+  type: "Eltwise"
+  bottom: "slice5_1"
+  bottom: "slice5_2"
+  top: "eltwise5"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "pool4"
+  type: "Pooling"
+  bottom: "eltwise5"
+  top: "pool4"
+  pooling_param {
+    pool: AVE
+    kernel_size: 3
+    stride: 3
+  }
+}
+layer {
+  name: "slice_fc1"
+  type: "Slice"
+  bottom: "pool4"
+  top: "slice_fc1_1"
+  top: "slice_fc1_2"
+  slice_param {
+    slice_dim: 1
+  }
+}
+layer {
+  name: "etlwise_fc1"
+  type: "Eltwise"
+  bottom: "slice_fc1_1"
+  bottom: "slice_fc1_2"
+  top: "eltwise_fc1"
+  eltwise_param {
+    operation: MAX
+  }
+}
+layer {
+  name: "drop1"
+  type: "Dropout"
+  bottom: "eltwise_fc1"
+  top: "eltwise_fc1"
+  dropout_param {
+    dropout_ratio: 0.7
+  }
+}
+layer {
+  name: "fc2"
+  type: "InnerProduct"
+  bottom: "eltwise_fc1"
+  top: "fc2"
+  inner_product_param {
+    num_output: 9
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "softmax_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc2"
+  bottom: "label"
+  top: "softmax_loss"
+}
+layer {
+  name: "accuracy_top1"
+  type: "Accuracy"
+  bottom: "fc2"
+  bottom: "label"
+  top: "accuracy_top1"
+  include {
+    phase: TEST
+  }
+}
+I0718 03:31:34.339287  7016 layer_factory.hpp:77] Creating layer data
+I0718 03:31:34.339287  7016 net.cpp:119] Creating Layer data
+I0718 03:31:34.339287  7016 net.cpp:432] data -> data
+I0718 03:31:34.339787  7016 net.cpp:432] data -> label
+I0718 03:31:34.341794 13816 db_leveldb.cpp:18] Opened leveldb D:/Research/LoveLiveFaceRecognition/valLevelDB
+I0718 03:31:34.342293  7016 data_layer.cpp:41] output data size: 64,3,128,128
+I0718 03:31:34.365857  7016 net.cpp:170] Setting up data
+I0718 03:31:34.365857  7016 net.cpp:177] Top shape: 64 3 128 128 (3145728)
+I0718 03:31:34.366358  7016 net.cpp:177] Top shape: 64 (64)
+I0718 03:31:34.367362  7016 net.cpp:185] Memory required for data: 12583168
+I0718 03:31:34.367362  7016 layer_factory.hpp:77] Creating layer label_data_1_split
+I0718 03:31:34.367863  7016 net.cpp:119] Creating Layer label_data_1_split
+I0718 03:31:34.367863  7016 net.cpp:458] label_data_1_split <- label
+I0718 03:31:34.368365  7016 net.cpp:432] label_data_1_split -> label_data_1_split_0
+I0718 03:31:34.368365  7016 net.cpp:432] label_data_1_split -> label_data_1_split_1
+I0718 03:31:34.369868  7016 net.cpp:170] Setting up label_data_1_split
+I0718 03:31:34.369868  7016 net.cpp:177] Top shape: 64 (64)
+I0718 03:31:34.369868  7016 net.cpp:177] Top shape: 64 (64)
+I0718 03:31:34.370369  7016 net.cpp:185] Memory required for data: 12583680
+I0718 03:31:34.370369  7016 layer_factory.hpp:77] Creating layer conv1
+I0718 03:31:34.370870  7016 net.cpp:119] Creating Layer conv1
+I0718 03:31:34.370870  7016 net.cpp:458] conv1 <- data
+I0718 03:31:34.371372  7016 net.cpp:432] conv1 -> conv1
+I0718 03:31:34.372876  7016 net.cpp:170] Setting up conv1
+I0718 03:31:34.372876  7016 net.cpp:177] Top shape: 64 32 128 128 (33554432)
+I0718 03:31:34.373378  7016 net.cpp:185] Memory required for data: 146801408
+I0718 03:31:34.373378  7016 layer_factory.hpp:77] Creating layer slice1
+I0718 03:31:34.373878  7016 net.cpp:119] Creating Layer slice1
+I0718 03:31:34.373878  7016 net.cpp:458] slice1 <- conv1
+I0718 03:31:34.374380  7016 net.cpp:432] slice1 -> slice1_1
+I0718 03:31:34.374380  7016 net.cpp:432] slice1 -> slice1_2
+I0718 03:31:34.374881  7016 net.cpp:170] Setting up slice1
+I0718 03:31:34.375383  7016 net.cpp:177] Top shape: 64 16 128 128 (16777216)
+I0718 03:31:34.375885  7016 net.cpp:177] Top shape: 64 16 128 128 (16777216)
+I0718 03:31:34.375885  7016 net.cpp:185] Memory required for data: 281019136
+I0718 03:31:34.376384  7016 layer_factory.hpp:77] Creating layer etlwise1
+I0718 03:31:34.376384  7016 net.cpp:119] Creating Layer etlwise1
+I0718 03:31:34.376886  7016 net.cpp:458] etlwise1 <- slice1_1
+I0718 03:31:34.377388  7016 net.cpp:458] etlwise1 <- slice1_2
+I0718 03:31:34.377888  7016 net.cpp:432] etlwise1 -> eltwise1
+I0718 03:31:34.377888  7016 net.cpp:170] Setting up etlwise1
+I0718 03:31:34.377888  7016 net.cpp:177] Top shape: 64 16 128 128 (16777216)
+I0718 03:31:34.378389  7016 net.cpp:185] Memory required for data: 348128000
+I0718 03:31:34.378389  7016 layer_factory.hpp:77] Creating layer pool1
+I0718 03:31:34.378891  7016 net.cpp:119] Creating Layer pool1
+I0718 03:31:34.378891  7016 net.cpp:458] pool1 <- eltwise1
+I0718 03:31:34.379392  7016 net.cpp:432] pool1 -> pool1
+I0718 03:31:34.380897  7016 net.cpp:170] Setting up pool1
+I0718 03:31:34.380897  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.381398  7016 net.cpp:185] Memory required for data: 364905216
+I0718 03:31:34.381398  7016 layer_factory.hpp:77] Creating layer conv2a
+I0718 03:31:34.381899  7016 net.cpp:119] Creating Layer conv2a
+I0718 03:31:34.381899  7016 net.cpp:458] conv2a <- pool1
+I0718 03:31:34.382400  7016 net.cpp:432] conv2a -> conv2a
+I0718 03:31:34.383904  7016 net.cpp:170] Setting up conv2a
+I0718 03:31:34.384405  7016 net.cpp:177] Top shape: 64 32 64 64 (8388608)
+I0718 03:31:34.384907  7016 net.cpp:185] Memory required for data: 398459648
+I0718 03:31:34.385408  7016 layer_factory.hpp:77] Creating layer slice2a
+I0718 03:31:34.385408  7016 net.cpp:119] Creating Layer slice2a
+I0718 03:31:34.385910  7016 net.cpp:458] slice2a <- conv2a
+I0718 03:31:34.385910  7016 net.cpp:432] slice2a -> slice2a_1
+I0718 03:31:34.386411  7016 net.cpp:432] slice2a -> slice2a_2
+I0718 03:31:34.386411  7016 net.cpp:170] Setting up slice2a
+I0718 03:31:34.386912  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.386912  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.387414  7016 net.cpp:185] Memory required for data: 432014080
+I0718 03:31:34.387414  7016 layer_factory.hpp:77] Creating layer etlwise2a
+I0718 03:31:34.387915  7016 net.cpp:119] Creating Layer etlwise2a
+I0718 03:31:34.387915  7016 net.cpp:458] etlwise2a <- slice2a_1
+I0718 03:31:34.388417  7016 net.cpp:458] etlwise2a <- slice2a_2
+I0718 03:31:34.388417  7016 net.cpp:432] etlwise2a -> eltwise2a
+I0718 03:31:34.388918  7016 net.cpp:170] Setting up etlwise2a
+I0718 03:31:34.388918  7016 net.cpp:177] Top shape: 64 16 64 64 (4194304)
+I0718 03:31:34.389420  7016 net.cpp:185] Memory required for data: 448791296
+I0718 03:31:34.389420  7016 layer_factory.hpp:77] Creating layer conv2
+I0718 03:31:34.389920  7016 net.cpp:119] Creating Layer conv2
+I0718 03:31:34.389920  7016 net.cpp:458] conv2 <- eltwise2a
+I0718 03:31:34.389920  7016 net.cpp:432] conv2 -> conv2
+I0718 03:31:34.393931  7016 net.cpp:170] Setting up conv2
+I0718 03:31:34.393931  7016 net.cpp:177] Top shape: 64 64 31 31 (3936256)
+I0718 03:31:34.394433  7016 net.cpp:185] Memory required for data: 464536320
+I0718 03:31:34.394433  7016 layer_factory.hpp:77] Creating layer slice2
+I0718 03:31:34.394935  7016 net.cpp:119] Creating Layer slice2
+I0718 03:31:34.394935  7016 net.cpp:458] slice2 <- conv2
+I0718 03:31:34.394935  7016 net.cpp:432] slice2 -> slice2_1
+I0718 03:31:34.395437  7016 net.cpp:432] slice2 -> slice2_2
+I0718 03:31:34.395437  7016 net.cpp:170] Setting up slice2
+I0718 03:31:34.395936  7016 net.cpp:177] Top shape: 64 32 31 31 (1968128)
+I0718 03:31:34.395936  7016 net.cpp:177] Top shape: 64 32 31 31 (1968128)
+I0718 03:31:34.396438  7016 net.cpp:185] Memory required for data: 480281344
+I0718 03:31:34.396438  7016 layer_factory.hpp:77] Creating layer etlwise2
+I0718 03:31:34.396438  7016 net.cpp:119] Creating Layer etlwise2
+I0718 03:31:34.396438  7016 net.cpp:458] etlwise2 <- slice2_1
+I0718 03:31:34.396939  7016 net.cpp:458] etlwise2 <- slice2_2
+I0718 03:31:34.397441  7016 net.cpp:432] etlwise2 -> eltwise2
+I0718 03:31:34.397441  7016 net.cpp:170] Setting up etlwise2
+I0718 03:31:34.397943  7016 net.cpp:177] Top shape: 64 32 31 31 (1968128)
+I0718 03:31:34.397943  7016 net.cpp:185] Memory required for data: 488153856
+I0718 03:31:34.398444  7016 layer_factory.hpp:77] Creating layer pool2
+I0718 03:31:34.398444  7016 net.cpp:119] Creating Layer pool2
+I0718 03:31:34.398946  7016 net.cpp:458] pool2 <- eltwise2
+I0718 03:31:34.398946  7016 net.cpp:432] pool2 -> pool2
+I0718 03:31:34.398946  7016 net.cpp:170] Setting up pool2
+I0718 03:31:34.399447  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.399447  7016 net.cpp:185] Memory required for data: 490251008
+I0718 03:31:34.399948  7016 layer_factory.hpp:77] Creating layer conv3a
+I0718 03:31:34.399948  7016 net.cpp:119] Creating Layer conv3a
+I0718 03:31:34.400449  7016 net.cpp:458] conv3a <- pool2
+I0718 03:31:34.400449  7016 net.cpp:432] conv3a -> conv3a
+I0718 03:31:34.403957  7016 net.cpp:170] Setting up conv3a
+I0718 03:31:34.403957  7016 net.cpp:177] Top shape: 64 64 16 16 (1048576)
+I0718 03:31:34.404459  7016 net.cpp:185] Memory required for data: 494445312
+I0718 03:31:34.404459  7016 layer_factory.hpp:77] Creating layer slice3a
+I0718 03:31:34.404459  7016 net.cpp:119] Creating Layer slice3a
+I0718 03:31:34.404961  7016 net.cpp:458] slice3a <- conv3a
+I0718 03:31:34.404961  7016 net.cpp:432] slice3a -> slice3a_1
+I0718 03:31:34.405462  7016 net.cpp:432] slice3a -> slice3a_2
+I0718 03:31:34.405462  7016 net.cpp:170] Setting up slice3a
+I0718 03:31:34.405963  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.405963  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.405963  7016 net.cpp:185] Memory required for data: 498639616
+I0718 03:31:34.406464  7016 layer_factory.hpp:77] Creating layer etlwise3a
+I0718 03:31:34.406464  7016 net.cpp:119] Creating Layer etlwise3a
+I0718 03:31:34.406464  7016 net.cpp:458] etlwise3a <- slice3a_1
+I0718 03:31:34.406464  7016 net.cpp:458] etlwise3a <- slice3a_2
+I0718 03:31:34.406965  7016 net.cpp:432] etlwise3a -> eltwise3a
+I0718 03:31:34.406965  7016 net.cpp:170] Setting up etlwise3a
+I0718 03:31:34.407467  7016 net.cpp:177] Top shape: 64 32 16 16 (524288)
+I0718 03:31:34.407467  7016 net.cpp:185] Memory required for data: 500736768
+I0718 03:31:34.407969  7016 layer_factory.hpp:77] Creating layer conv3
+I0718 03:31:34.407969  7016 net.cpp:119] Creating Layer conv3
+I0718 03:31:34.408470  7016 net.cpp:458] conv3 <- eltwise3a
+I0718 03:31:34.408470  7016 net.cpp:432] conv3 -> conv3
+I0718 03:31:34.410475  7016 net.cpp:170] Setting up conv3
+I0718 03:31:34.410475  7016 net.cpp:177] Top shape: 64 128 14 14 (1605632)
+I0718 03:31:34.411479  7016 net.cpp:185] Memory required for data: 507159296
+I0718 03:31:34.411980  7016 layer_factory.hpp:77] Creating layer slice3
+I0718 03:31:34.412480  7016 net.cpp:119] Creating Layer slice3
+I0718 03:31:34.412480  7016 net.cpp:458] slice3 <- conv3
+I0718 03:31:34.412982  7016 net.cpp:432] slice3 -> slice3_1
+I0718 03:31:34.412982  7016 net.cpp:432] slice3 -> slice3_2
+I0718 03:31:34.413485  7016 net.cpp:170] Setting up slice3
+I0718 03:31:34.413485  7016 net.cpp:177] Top shape: 64 64 14 14 (802816)
+I0718 03:31:34.413985  7016 net.cpp:177] Top shape: 64 64 14 14 (802816)
+I0718 03:31:34.413985  7016 net.cpp:185] Memory required for data: 513581824
+I0718 03:31:34.414487  7016 layer_factory.hpp:77] Creating layer etlwise3
+I0718 03:31:34.414487  7016 net.cpp:119] Creating Layer etlwise3
+I0718 03:31:34.414988  7016 net.cpp:458] etlwise3 <- slice3_1
+I0718 03:31:34.414988  7016 net.cpp:458] etlwise3 <- slice3_2
+I0718 03:31:34.415489  7016 net.cpp:432] etlwise3 -> eltwise3
+I0718 03:31:34.415489  7016 net.cpp:170] Setting up etlwise3
+I0718 03:31:34.415990  7016 net.cpp:177] Top shape: 64 64 14 14 (802816)
+I0718 03:31:34.415990  7016 net.cpp:185] Memory required for data: 516793088
+I0718 03:31:34.415990  7016 layer_factory.hpp:77] Creating layer pool3
+I0718 03:31:34.416491  7016 net.cpp:119] Creating Layer pool3
+I0718 03:31:34.416993  7016 net.cpp:458] pool3 <- eltwise3
+I0718 03:31:34.416993  7016 net.cpp:432] pool3 -> pool3
+I0718 03:31:34.416993  7016 net.cpp:170] Setting up pool3
+I0718 03:31:34.417495  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.417495  7016 net.cpp:185] Memory required for data: 517595904
+I0718 03:31:34.417995  7016 layer_factory.hpp:77] Creating layer conv4a
+I0718 03:31:34.418496  7016 net.cpp:119] Creating Layer conv4a
+I0718 03:31:34.418496  7016 net.cpp:458] conv4a <- pool3
+I0718 03:31:34.418998  7016 net.cpp:432] conv4a -> conv4a
+I0718 03:31:34.421003  7016 net.cpp:170] Setting up conv4a
+I0718 03:31:34.421003  7016 net.cpp:177] Top shape: 64 128 7 7 (401408)
+I0718 03:31:34.428021  7016 net.cpp:185] Memory required for data: 519201536
+I0718 03:31:34.428021  7016 layer_factory.hpp:77] Creating layer slice4a
+I0718 03:31:34.428524  7016 net.cpp:119] Creating Layer slice4a
+I0718 03:31:34.428524  7016 net.cpp:458] slice4a <- conv4a
+I0718 03:31:34.428524  7016 net.cpp:432] slice4a -> slice4a_1
+I0718 03:31:34.428524  7016 net.cpp:432] slice4a -> slice4a_2
+I0718 03:31:34.429525  7016 net.cpp:170] Setting up slice4a
+I0718 03:31:34.429525  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.430027  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.430027  7016 net.cpp:185] Memory required for data: 520807168
+I0718 03:31:34.430529  7016 layer_factory.hpp:77] Creating layer etlwise4a
+I0718 03:31:34.430529  7016 net.cpp:119] Creating Layer etlwise4a
+I0718 03:31:34.431031  7016 net.cpp:458] etlwise4a <- slice4a_1
+I0718 03:31:34.431031  7016 net.cpp:458] etlwise4a <- slice4a_2
+I0718 03:31:34.431532  7016 net.cpp:432] etlwise4a -> eltwise4a
+I0718 03:31:34.431532  7016 net.cpp:170] Setting up etlwise4a
+I0718 03:31:34.432034  7016 net.cpp:177] Top shape: 64 64 7 7 (200704)
+I0718 03:31:34.432034  7016 net.cpp:185] Memory required for data: 521609984
+I0718 03:31:34.432535  7016 layer_factory.hpp:77] Creating layer conv4
+I0718 03:31:34.432535  7016 net.cpp:119] Creating Layer conv4
+I0718 03:31:34.433037  7016 net.cpp:458] conv4 <- eltwise4a
+I0718 03:31:34.433037  7016 net.cpp:432] conv4 -> conv4
+I0718 03:31:34.435041  7016 net.cpp:170] Setting up conv4
+I0718 03:31:34.435041  7016 net.cpp:177] Top shape: 64 96 7 7 (301056)
+I0718 03:31:34.435041  7016 net.cpp:185] Memory required for data: 522814208
+I0718 03:31:34.435542  7016 layer_factory.hpp:77] Creating layer slice4
+I0718 03:31:34.435542  7016 net.cpp:119] Creating Layer slice4
+I0718 03:31:34.435542  7016 net.cpp:458] slice4 <- conv4
+I0718 03:31:34.436044  7016 net.cpp:432] slice4 -> slice4_1
+I0718 03:31:34.436044  7016 net.cpp:432] slice4 -> slice4_2
+I0718 03:31:34.436044  7016 net.cpp:170] Setting up slice4
+I0718 03:31:34.436545  7016 net.cpp:177] Top shape: 64 48 7 7 (150528)
+I0718 03:31:34.436545  7016 net.cpp:177] Top shape: 64 48 7 7 (150528)
+I0718 03:31:34.436545  7016 net.cpp:185] Memory required for data: 524018432
+I0718 03:31:34.436545  7016 layer_factory.hpp:77] Creating layer etlwise4
+I0718 03:31:34.437047  7016 net.cpp:119] Creating Layer etlwise4
+I0718 03:31:34.437047  7016 net.cpp:458] etlwise4 <- slice4_1
+I0718 03:31:34.437047  7016 net.cpp:458] etlwise4 <- slice4_2
+I0718 03:31:34.438050  7016 net.cpp:432] etlwise4 -> eltwise4
+I0718 03:31:34.460108  7016 net.cpp:170] Setting up etlwise4
+I0718 03:31:34.460108  7016 net.cpp:177] Top shape: 64 48 7 7 (150528)
+I0718 03:31:34.460608  7016 net.cpp:185] Memory required for data: 524620544
+I0718 03:31:34.461110  7016 layer_factory.hpp:77] Creating layer conv5a
+I0718 03:31:34.461110  7016 net.cpp:119] Creating Layer conv5a
+I0718 03:31:34.461611  7016 net.cpp:458] conv5a <- eltwise4
+I0718 03:31:34.461611  7016 net.cpp:432] conv5a -> conv5a
+I0718 03:31:34.463616  7016 net.cpp:170] Setting up conv5a
+I0718 03:31:34.463616  7016 net.cpp:177] Top shape: 64 96 5 5 (153600)
+I0718 03:31:34.463616  7016 net.cpp:185] Memory required for data: 525234944
+I0718 03:31:34.464118  7016 layer_factory.hpp:77] Creating layer slice5a
+I0718 03:31:34.464118  7016 net.cpp:119] Creating Layer slice5a
+I0718 03:31:34.464620  7016 net.cpp:458] slice5a <- conv5a
+I0718 03:31:34.464620  7016 net.cpp:432] slice5a -> slice5a_1
+I0718 03:31:34.464620  7016 net.cpp:432] slice5a -> slice5a_2
+I0718 03:31:34.465121  7016 net.cpp:170] Setting up slice5a
+I0718 03:31:34.465121  7016 net.cpp:177] Top shape: 64 48 5 5 (76800)
+I0718 03:31:34.465622  7016 net.cpp:177] Top shape: 64 48 5 5 (76800)
+I0718 03:31:34.465622  7016 net.cpp:185] Memory required for data: 525849344
+I0718 03:31:34.466123  7016 layer_factory.hpp:77] Creating layer etlwise5a
+I0718 03:31:34.466123  7016 net.cpp:119] Creating Layer etlwise5a
+I0718 03:31:34.466624  7016 net.cpp:458] etlwise5a <- slice5a_1
+I0718 03:31:34.466624  7016 net.cpp:458] etlwise5a <- slice5a_2
+I0718 03:31:34.467126  7016 net.cpp:432] etlwise5a -> eltwise5a
+I0718 03:31:34.467126  7016 net.cpp:170] Setting up etlwise5a
+I0718 03:31:34.467628  7016 net.cpp:177] Top shape: 64 48 5 5 (76800)
+I0718 03:31:34.467628  7016 net.cpp:185] Memory required for data: 526156544
+I0718 03:31:34.468128  7016 layer_factory.hpp:77] Creating layer conv5
+I0718 03:31:34.468128  7016 net.cpp:119] Creating Layer conv5
+I0718 03:31:34.468128  7016 net.cpp:458] conv5 <- eltwise5a
+I0718 03:31:34.468631  7016 net.cpp:432] conv5 -> conv5
+I0718 03:31:34.471638  7016 net.cpp:170] Setting up conv5
+I0718 03:31:34.471638  7016 net.cpp:177] Top shape: 64 256 3 3 (147456)
+I0718 03:31:34.472139  7016 net.cpp:185] Memory required for data: 526746368
+I0718 03:31:34.472139  7016 layer_factory.hpp:77] Creating layer slice5
+I0718 03:31:34.472640  7016 net.cpp:119] Creating Layer slice5
+I0718 03:31:34.472640  7016 net.cpp:458] slice5 <- conv5
+I0718 03:31:34.472640  7016 net.cpp:432] slice5 -> slice5_1
+I0718 03:31:34.473644  7016 net.cpp:432] slice5 -> slice5_2
+I0718 03:31:34.473644  7016 net.cpp:170] Setting up slice5
+I0718 03:31:34.474145  7016 net.cpp:177] Top shape: 64 128 3 3 (73728)
+I0718 03:31:34.474145  7016 net.cpp:177] Top shape: 64 128 3 3 (73728)
+I0718 03:31:34.474647  7016 net.cpp:185] Memory required for data: 527336192
+I0718 03:31:34.474647  7016 layer_factory.hpp:77] Creating layer etlwise5
+I0718 03:31:34.475147  7016 net.cpp:119] Creating Layer etlwise5
+I0718 03:31:34.475147  7016 net.cpp:458] etlwise5 <- slice5_1
+I0718 03:31:34.475649  7016 net.cpp:458] etlwise5 <- slice5_2
+I0718 03:31:34.475649  7016 net.cpp:432] etlwise5 -> eltwise5
+I0718 03:31:34.476150  7016 net.cpp:170] Setting up etlwise5
+I0718 03:31:34.476150  7016 net.cpp:177] Top shape: 64 128 3 3 (73728)
+I0718 03:31:34.476150  7016 net.cpp:185] Memory required for data: 527631104
+I0718 03:31:34.476651  7016 layer_factory.hpp:77] Creating layer pool4
+I0718 03:31:34.476651  7016 net.cpp:119] Creating Layer pool4
+I0718 03:31:34.477152  7016 net.cpp:458] pool4 <- eltwise5
+I0718 03:31:34.477152  7016 net.cpp:432] pool4 -> pool4
+I0718 03:31:34.478665  7016 net.cpp:170] Setting up pool4
+I0718 03:31:34.478665  7016 net.cpp:177] Top shape: 64 128 1 1 (8192)
+I0718 03:31:34.478665  7016 net.cpp:185] Memory required for data: 527663872
+I0718 03:31:34.479158  7016 layer_factory.hpp:77] Creating layer slice_fc1
+I0718 03:31:34.479158  7016 net.cpp:119] Creating Layer slice_fc1
+I0718 03:31:34.479158  7016 net.cpp:458] slice_fc1 <- pool4
+I0718 03:31:34.479660  7016 net.cpp:432] slice_fc1 -> slice_fc1_1
+I0718 03:31:34.479660  7016 net.cpp:432] slice_fc1 -> slice_fc1_2
+I0718 03:31:34.480161  7016 net.cpp:170] Setting up slice_fc1
+I0718 03:31:34.480662  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.480662  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.480662  7016 net.cpp:185] Memory required for data: 527696640
+I0718 03:31:34.480662  7016 layer_factory.hpp:77] Creating layer etlwise_fc1
+I0718 03:31:34.481164  7016 net.cpp:119] Creating Layer etlwise_fc1
+I0718 03:31:34.481164  7016 net.cpp:458] etlwise_fc1 <- slice_fc1_1
+I0718 03:31:34.481164  7016 net.cpp:458] etlwise_fc1 <- slice_fc1_2
+I0718 03:31:34.481665  7016 net.cpp:432] etlwise_fc1 -> eltwise_fc1
+I0718 03:31:34.481665  7016 net.cpp:170] Setting up etlwise_fc1
+I0718 03:31:34.482167  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.482167  7016 net.cpp:185] Memory required for data: 527713024
+I0718 03:31:34.482167  7016 layer_factory.hpp:77] Creating layer drop1
+I0718 03:31:34.482167  7016 net.cpp:119] Creating Layer drop1
+I0718 03:31:34.482668  7016 net.cpp:458] drop1 <- eltwise_fc1
+I0718 03:31:34.482668  7016 net.cpp:417] drop1 -> eltwise_fc1 (in-place)
+I0718 03:31:34.483170  7016 net.cpp:170] Setting up drop1
+I0718 03:31:34.483170  7016 net.cpp:177] Top shape: 64 64 1 1 (4096)
+I0718 03:31:34.483670  7016 net.cpp:185] Memory required for data: 527729408
+I0718 03:31:34.483670  7016 layer_factory.hpp:77] Creating layer fc2
+I0718 03:31:34.483670  7016 net.cpp:119] Creating Layer fc2
+I0718 03:31:34.484172  7016 net.cpp:458] fc2 <- eltwise_fc1
+I0718 03:31:34.484172  7016 net.cpp:432] fc2 -> fc2
+I0718 03:31:34.484673  7016 net.cpp:170] Setting up fc2
+I0718 03:31:34.484673  7016 net.cpp:177] Top shape: 64 9 (576)
+I0718 03:31:34.485174  7016 net.cpp:185] Memory required for data: 527731712
+I0718 03:31:34.485174  7016 layer_factory.hpp:77] Creating layer fc2_fc2_0_split
+I0718 03:31:34.485174  7016 net.cpp:119] Creating Layer fc2_fc2_0_split
+I0718 03:31:34.485677  7016 net.cpp:458] fc2_fc2_0_split <- fc2
+I0718 03:31:34.485677  7016 net.cpp:432] fc2_fc2_0_split -> fc2_fc2_0_split_0
+I0718 03:31:34.485677  7016 net.cpp:432] fc2_fc2_0_split -> fc2_fc2_0_split_1
+I0718 03:31:34.486177  7016 net.cpp:170] Setting up fc2_fc2_0_split
+I0718 03:31:34.486177  7016 net.cpp:177] Top shape: 64 9 (576)
+I0718 03:31:34.486678  7016 net.cpp:177] Top shape: 64 9 (576)
+I0718 03:31:34.487180  7016 net.cpp:185] Memory required for data: 527736320
+I0718 03:31:34.487180  7016 layer_factory.hpp:77] Creating layer softmax_loss
+I0718 03:31:34.487681  7016 net.cpp:119] Creating Layer softmax_loss
+I0718 03:31:34.488183  7016 net.cpp:458] softmax_loss <- fc2_fc2_0_split_0
+I0718 03:31:34.488183  7016 net.cpp:458] softmax_loss <- label_data_1_split_0
+I0718 03:31:34.488684  7016 net.cpp:432] softmax_loss -> softmax_loss
+I0718 03:31:34.488684  7016 layer_factory.hpp:77] Creating layer softmax_loss
+I0718 03:31:34.489186  7016 net.cpp:170] Setting up softmax_loss
+I0718 03:31:34.489717  7016 net.cpp:177] Top shape: (1)
+I0718 03:31:34.489717  7016 net.cpp:180]     with loss weight 1
+I0718 03:31:34.490187  7016 net.cpp:185] Memory required for data: 527736324
+I0718 03:31:34.490187  7016 layer_factory.hpp:77] Creating layer accuracy_top1
+I0718 03:31:34.490689  7016 net.cpp:119] Creating Layer accuracy_top1
+I0718 03:31:34.490689  7016 net.cpp:458] accuracy_top1 <- fc2_fc2_0_split_1
+I0718 03:31:34.490689  7016 net.cpp:458] accuracy_top1 <- label_data_1_split_1
+I0718 03:31:34.491190  7016 net.cpp:432] accuracy_top1 -> accuracy_top1
+I0718 03:31:34.491190  7016 net.cpp:170] Setting up accuracy_top1
+I0718 03:31:34.491693  7016 net.cpp:177] Top shape: (1)
+I0718 03:31:34.491693  7016 net.cpp:185] Memory required for data: 527736328
+I0718 03:31:34.491693  7016 net.cpp:249] accuracy_top1 does not need backward computation.
+I0718 03:31:34.491693  7016 net.cpp:246] softmax_loss needs backward computation.
+I0718 03:31:34.492193  7016 net.cpp:246] fc2_fc2_0_split needs backward computation.
+I0718 03:31:34.492193  7016 net.cpp:246] fc2 needs backward computation.
+I0718 03:31:34.492694  7016 net.cpp:246] drop1 needs backward computation.
+I0718 03:31:34.492694  7016 net.cpp:246] etlwise_fc1 needs backward computation.
+I0718 03:31:34.493196  7016 net.cpp:246] slice_fc1 needs backward computation.
+I0718 03:31:34.493697  7016 net.cpp:246] pool4 needs backward computation.
+I0718 03:31:34.493697  7016 net.cpp:246] etlwise5 needs backward computation.
+I0718 03:31:34.493697  7016 net.cpp:246] slice5 needs backward computation.
+I0718 03:31:34.493697  7016 net.cpp:246] conv5 needs backward computation.
+I0718 03:31:34.494199  7016 net.cpp:246] etlwise5a needs backward computation.
+I0718 03:31:34.494199  7016 net.cpp:246] slice5a needs backward computation.
+I0718 03:31:34.494699  7016 net.cpp:246] conv5a needs backward computation.
+I0718 03:31:34.494699  7016 net.cpp:246] etlwise4 needs backward computation.
+I0718 03:31:34.495201  7016 net.cpp:246] slice4 needs backward computation.
+I0718 03:31:34.495201  7016 net.cpp:246] conv4 needs backward computation.
+I0718 03:31:34.495201  7016 net.cpp:246] etlwise4a needs backward computation.
+I0718 03:31:34.495201  7016 net.cpp:246] slice4a needs backward computation.
+I0718 03:31:34.495702  7016 net.cpp:246] conv4a needs backward computation.
+I0718 03:31:34.496204  7016 net.cpp:246] pool3 needs backward computation.
+I0718 03:31:34.496204  7016 net.cpp:246] etlwise3 needs backward computation.
+I0718 03:31:34.496704  7016 net.cpp:246] slice3 needs backward computation.
+I0718 03:31:34.496704  7016 net.cpp:246] conv3 needs backward computation.
+I0718 03:31:34.497206  7016 net.cpp:246] etlwise3a needs backward computation.
+I0718 03:31:34.497206  7016 net.cpp:246] slice3a needs backward computation.
+I0718 03:31:34.497206  7016 net.cpp:246] conv3a needs backward computation.
+I0718 03:31:34.497707  7016 net.cpp:246] pool2 needs backward computation.
+I0718 03:31:34.497707  7016 net.cpp:246] etlwise2 needs backward computation.
+I0718 03:31:34.497707  7016 net.cpp:246] slice2 needs backward computation.
+I0718 03:31:34.498209  7016 net.cpp:246] conv2 needs backward computation.
+I0718 03:31:34.498209  7016 net.cpp:246] etlwise2a needs backward computation.
+I0718 03:31:34.498710  7016 net.cpp:246] slice2a needs backward computation.
+I0718 03:31:34.498710  7016 net.cpp:246] conv2a needs backward computation.
+I0718 03:31:34.499212  7016 net.cpp:246] pool1 needs backward computation.
+I0718 03:31:34.499212  7016 net.cpp:246] etlwise1 needs backward computation.
+I0718 03:31:34.499212  7016 net.cpp:246] slice1 needs backward computation.
+I0718 03:31:34.499713  7016 net.cpp:246] conv1 needs backward computation.
+I0718 03:31:34.499713  7016 net.cpp:249] label_data_1_split does not need backward computation.
+I0718 03:31:34.499713  7016 net.cpp:249] data does not need backward computation.
+I0718 03:31:34.500214  7016 net.cpp:292] This network produces output accuracy_top1
+I0718 03:31:34.500214  7016 net.cpp:292] This network produces output softmax_loss
+I0718 03:31:34.500214  7016 net.cpp:305] Network initialization done.
+I0718 03:31:34.500715  7016 solver.cpp:60] Solver scaffolding done.
+I0718 03:31:34.501216  7016 caffe.cpp:250] Starting Optimization
+I0718 03:31:34.501718  7016 solver.cpp:283] Solving LLFace
+I0718 03:31:34.501718  7016 solver.cpp:284] Learning Rate Policy: multistep
+I0718 03:31:35.118525  7016 solver.cpp:232] Iteration 0, loss = 6.17134
+I0718 03:31:35.118525  7016 solver.cpp:248]     Train net output #0: softmax_loss = 6.17134 (* 1 = 6.17134 loss)
+I0718 03:31:35.119026  7016 sgd_solver.cpp:106] Iteration 0, lr = 0.01
+I0718 03:31:35.324573  7016 sgd_solver.cpp:158] weight diff/data:0.052411 0.078962 0.035739 0.020988 0.056995 0.033959 0.039425 0.054094 0.541455 0.111987 
+I0718 03:31:39.138758  7016 solver.cpp:232] Iteration 20, loss = 2.31473
+I0718 03:31:39.138758  7016 solver.cpp:248]     Train net output #0: softmax_loss = 2.31473 (* 1 = 2.31473 loss)
+I0718 03:31:39.139761  7016 sgd_solver.cpp:106] Iteration 20, lr = 0.01
+I0718 03:31:39.163856  7016 sgd_solver.cpp:158] weight diff/data:0.018642 0.021449 0.045108 0.008179 0.014497 0.008248 0.012319 0.021652 0.020424 0.041439 
+I0718 03:31:42.946444  7016 solver.cpp:232] Iteration 40, loss = 2.03683
+I0718 03:31:42.946944  7016 solver.cpp:248]     Train net output #0: softmax_loss = 2.03683 (* 1 = 2.03683 loss)
+I0718 03:31:42.947445  7016 sgd_solver.cpp:106] Iteration 40, lr = 0.01
+I0718 03:31:42.969004  7016 sgd_solver.cpp:158] weight diff/data:0.026351 0.021308 0.011672 0.004996 0.009176 0.009694 0.006841 0.043414 0.013956 0.030065 
+I0718 03:31:46.684383  7016 solver.cpp:232] Iteration 60, loss = 2.11054
+I0718 03:31:46.684383  7016 solver.cpp:248]     Train net output #0: softmax_loss = 2.11054 (* 1 = 2.11054 loss)
+I0718 03:31:46.684885  7016 sgd_solver.cpp:106] Iteration 60, lr = 0.01
+I0718 03:31:46.706945  7016 sgd_solver.cpp:158] weight diff/data:0.046276 0.038669 0.022085 0.009628 0.015928 0.008817 0.025785 0.030183 0.037107 0.053619 
+I0718 03:31:50.466462  7016 solver.cpp:232] Iteration 80, loss = 1.56063
+I0718 03:31:50.466462  7016 solver.cpp:248]     Train net output #0: softmax_loss = 1.56063 (* 1 = 1.56063 loss)
+I0718 03:31:50.466462  7016 sgd_solver.cpp:106] Iteration 80, lr = 0.01
+I0718 03:31:50.488518  7016 sgd_solver.cpp:158] weight diff/data:0.012265 0.028113 0.009491 0.011135 0.021066 0.007709 0.006825 0.015279 0.012728 0.057364 
+I0718 03:31:54.196403  7016 solver.cpp:461] Snapshotting to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_100.caffemodel
+I0718 03:31:54.223974  7016 sgd_solver.cpp:319] Snapshotting solver state to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_100.solverstate
+I0718 03:31:54.227987  7016 solver.cpp:341] Iteration 100, Testing net (#0)
+I0718 03:31:54.928872  7016 solver.cpp:410]     Test net output #0: accuracy_top1 = 0.786458
+I0718 03:31:54.929356  7016 solver.cpp:410]     Test net output #1: softmax_loss = 0.681681 (* 1 = 0.681681 loss)
+I0718 03:31:55.155954  7016 solver.cpp:232] Iteration 100, loss = 0.856193
+I0718 03:31:55.155954  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.856193 (* 1 = 0.856193 loss)
+I0718 03:31:55.155954  7016 sgd_solver.cpp:106] Iteration 100, lr = 0.01
+I0718 03:31:55.179015  7016 sgd_solver.cpp:158] weight diff/data:0.018458 0.020432 0.011037 0.004798 0.014175 0.032963 0.006837 0.056027 0.018320 0.153466 
+I0718 03:31:57.389416  7016 solver.cpp:232] Iteration 120, loss = 0.594632
+I0718 03:31:57.389416  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.594632 (* 1 = 0.594632 loss)
+I0718 03:31:57.389416  7016 sgd_solver.cpp:106] Iteration 120, lr = 0.01
+I0718 03:31:57.410951  7016 sgd_solver.cpp:158] weight diff/data:0.025841 0.024368 0.025714 0.006616 0.021605 0.012193 0.008955 0.020410 0.014037 0.038220 
+I0718 03:32:01.198061  7016 solver.cpp:232] Iteration 140, loss = 0.54842
+I0718 03:32:01.198061  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.54842 (* 1 = 0.54842 loss)
+I0718 03:32:01.198562  7016 sgd_solver.cpp:106] Iteration 140, lr = 0.01
+I0718 03:32:01.220120  7016 sgd_solver.cpp:158] weight diff/data:0.015877 0.053256 0.035530 0.008480 0.020313 0.017621 0.013408 0.036637 0.017938 0.080441 
+I0718 03:32:04.975106  7016 solver.cpp:232] Iteration 160, loss = 0.276677
+I0718 03:32:04.975106  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.276677 (* 1 = 0.276677 loss)
+I0718 03:32:04.975106  7016 sgd_solver.cpp:106] Iteration 160, lr = 0.01
+I0718 03:32:04.997166  7016 sgd_solver.cpp:158] weight diff/data:0.016339 0.021565 0.011905 0.010118 0.015385 0.008396 0.008194 0.021985 0.026347 0.037346 
+I0718 03:32:08.758167  7016 solver.cpp:232] Iteration 180, loss = 0.132187
+I0718 03:32:08.758167  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.132187 (* 1 = 0.132187 loss)
+I0718 03:32:08.758167  7016 sgd_solver.cpp:106] Iteration 180, lr = 0.01
+I0718 03:32:08.780226  7016 sgd_solver.cpp:158] weight diff/data:0.124184 0.009680 0.007530 0.005402 0.010231 0.003984 0.005870 0.013681 0.015297 0.025354 
+I0718 03:32:10.860258  7016 solver.cpp:461] Snapshotting to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_200.caffemodel
+I0718 03:32:10.947489  7016 sgd_solver.cpp:319] Snapshotting solver state to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_200.solverstate
+I0718 03:32:10.951499  7016 solver.cpp:341] Iteration 200, Testing net (#0)
+I0718 03:32:11.010658  7016 solver.cpp:410]     Test net output #0: accuracy_top1 = 0.984375
+I0718 03:32:11.011159  7016 solver.cpp:410]     Test net output #1: softmax_loss = 0.0562063 (* 1 = 0.0562063 loss)
+I0718 03:32:11.030712  7016 solver.cpp:232] Iteration 200, loss = 0.0788497
+I0718 03:32:11.031213  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.0788497 (* 1 = 0.0788497 loss)
+I0718 03:32:11.033217  7016 sgd_solver.cpp:106] Iteration 200, lr = 0.01
+I0718 03:32:11.053773  7016 sgd_solver.cpp:158] weight diff/data:0.009704 0.007683 0.005682 0.009168 0.108347 0.006200 0.005135 0.013073 0.009934 0.049166 
+I0718 03:32:14.743700  7016 solver.cpp:232] Iteration 220, loss = 0.132452
+I0718 03:32:14.743700  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.132452 (* 1 = 0.132452 loss)
+I0718 03:32:14.745203  7016 sgd_solver.cpp:106] Iteration 220, lr = 0.01
+I0718 03:32:14.822409  7016 sgd_solver.cpp:158] weight diff/data:0.017663 0.008612 0.012833 0.006944 0.010228 0.005588 0.007259 0.043254 0.007933 0.030894 
+I0718 03:32:17.015765  7016 solver.cpp:232] Iteration 240, loss = 0.205193
+I0718 03:32:17.015765  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.205193 (* 1 = 0.205193 loss)
+I0718 03:32:17.017773  7016 sgd_solver.cpp:106] Iteration 240, lr = 0.01
+I0718 03:32:17.060863  7016 sgd_solver.cpp:158] weight diff/data:0.023167 0.017585 0.044848 0.009546 0.017844 0.010423 0.015187 0.019638 0.013959 0.096600 
+I0718 03:32:20.826584  7016 solver.cpp:232] Iteration 260, loss = 0.183212
+I0718 03:32:20.826584  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.183212 (* 1 = 0.183212 loss)
+I0718 03:32:20.829092  7016 sgd_solver.cpp:106] Iteration 260, lr = 0.01
+I0718 03:32:20.850145  7016 sgd_solver.cpp:158] weight diff/data:0.347515 0.022659 0.013503 0.006493 0.019759 0.027045 0.013471 0.020832 0.011107 0.067300 
+I0718 03:32:24.682390  7016 solver.cpp:232] Iteration 280, loss = 0.0865083
+I0718 03:32:24.682390  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.0865084 (* 1 = 0.0865084 loss)
+I0718 03:32:24.683894  7016 sgd_solver.cpp:106] Iteration 280, lr = 0.01
+I0718 03:32:25.086967  7016 sgd_solver.cpp:158] weight diff/data:0.010528 0.007219 0.010425 0.006078 0.010560 0.006565 0.004850 0.009113 0.009104 0.023057 
+I0718 03:32:28.451414  7016 solver.cpp:461] Snapshotting to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_300.caffemodel
+I0718 03:32:28.860536  7016 sgd_solver.cpp:319] Snapshotting solver state to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_300.solverstate
+I0718 03:32:28.865550  7016 solver.cpp:341] Iteration 300, Testing net (#0)
+I0718 03:32:29.239043  7016 solver.cpp:410]     Test net output #0: accuracy_top1 = 0.96875
+I0718 03:32:29.239043  7016 solver.cpp:410]     Test net output #1: softmax_loss = 0.0839828 (* 1 = 0.0839828 loss)
+I0718 03:32:29.256119  7016 solver.cpp:232] Iteration 300, loss = 0.0352414
+I0718 03:32:29.256119  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.0352414 (* 1 = 0.0352414 loss)
+I0718 03:32:29.256590  7016 sgd_solver.cpp:106] Iteration 300, lr = 0.01
+I0718 03:32:29.280153  7016 sgd_solver.cpp:158] weight diff/data:0.011068 0.007214 0.007950 0.003453 0.008265 0.006642 0.007191 0.013058 0.010592 0.024313 
+I0718 03:32:31.502846  7016 solver.cpp:232] Iteration 320, loss = 0.195513
+I0718 03:32:31.502846  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.195513 (* 1 = 0.195513 loss)
+I0718 03:32:31.504350  7016 sgd_solver.cpp:106] Iteration 320, lr = 0.01
+I0718 03:32:31.526911  7016 sgd_solver.cpp:158] weight diff/data:0.025121 0.059229 0.007208 0.004744 0.010840 0.009440 0.006977 0.014549 0.008474 0.013459 
+I0718 03:32:35.235781  7016 solver.cpp:232] Iteration 340, loss = 0.0385566
+I0718 03:32:35.235781  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.0385566 (* 1 = 0.0385566 loss)
+I0718 03:32:35.237284  7016 sgd_solver.cpp:106] Iteration 340, lr = 0.01
+I0718 03:32:35.313989  7016 sgd_solver.cpp:158] weight diff/data:0.014261 0.007161 0.005171 0.003397 0.007970 0.003699 0.005860 0.017494 0.016717 0.019233 
+I0718 03:32:39.012913  7016 solver.cpp:232] Iteration 360, loss = 0.0145947
+I0718 03:32:39.013413  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.0145947 (* 1 = 0.0145947 loss)
+I0718 03:32:39.014392  7016 sgd_solver.cpp:106] Iteration 360, lr = 0.01
+I0718 03:32:39.091096  7016 sgd_solver.cpp:158] weight diff/data:0.009597 0.005202 0.004548 0.005512 0.008942 0.004345 0.004439 0.018368 0.006256 0.020543 
+I0718 03:32:42.848590  7016 solver.cpp:232] Iteration 380, loss = 0.00832255
+I0718 03:32:42.848590  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.00832253 (* 1 = 0.00832253 loss)
+I0718 03:32:42.851122  7016 sgd_solver.cpp:106] Iteration 380, lr = 0.01
+I0718 03:32:42.875663  7016 sgd_solver.cpp:158] weight diff/data:0.007177 0.014420 0.007184 0.004666 0.011642 0.004198 0.004773 0.010765 0.007324 0.020603 
+I0718 03:32:46.300324  7016 solver.cpp:461] Snapshotting to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_400.caffemodel
+I0718 03:32:46.447216  7016 sgd_solver.cpp:319] Snapshotting solver state to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_400.solverstate
+I0718 03:32:46.451726  7016 solver.cpp:341] Iteration 400, Testing net (#0)
+I0718 03:32:46.693871  7016 solver.cpp:410]     Test net output #0: accuracy_top1 = 0.984375
+I0718 03:32:46.693871  7016 solver.cpp:410]     Test net output #1: softmax_loss = 0.0792195 (* 1 = 0.0792195 loss)
+I0718 03:32:46.713924  7016 solver.cpp:232] Iteration 400, loss = 0.208054
+I0718 03:32:46.713924  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.208054 (* 1 = 0.208054 loss)
+I0718 03:32:46.715930  7016 sgd_solver.cpp:46] MultiStep Status: Iteration 400, step = 1
+I0718 03:32:46.716433  7016 sgd_solver.cpp:106] Iteration 400, lr = 0.002
+I0718 03:32:46.740995  7016 sgd_solver.cpp:158] weight diff/data:0.019767 0.011933 0.005544 0.003993 0.006303 0.005692 0.004270 0.013229 0.005634 0.011355 
+I0718 03:32:48.909309  7016 solver.cpp:232] Iteration 420, loss = 0.0277829
+I0718 03:32:48.909809  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.0277829 (* 1 = 0.0277829 loss)
+I0718 03:32:48.910838  7016 sgd_solver.cpp:106] Iteration 420, lr = 0.002
+I0718 03:32:48.933873  7016 sgd_solver.cpp:158] weight diff/data:0.001912 0.001052 0.001644 0.001435 0.001376 0.003375 0.000791 0.002701 0.002179 0.003951 
+I0718 03:32:52.698921  7016 solver.cpp:232] Iteration 440, loss = 0.0429658
+I0718 03:32:52.698921  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.0429658 (* 1 = 0.0429658 loss)
+I0718 03:32:52.700927  7016 sgd_solver.cpp:106] Iteration 440, lr = 0.002
+I0718 03:32:52.725994  7016 sgd_solver.cpp:158] weight diff/data:0.000946 0.000867 0.000905 0.000482 0.002236 0.001277 0.000711 0.001703 0.001008 0.003450 
+I0718 03:32:56.486606  7016 solver.cpp:232] Iteration 460, loss = 0.00486029
+I0718 03:32:56.486606  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.00486027 (* 1 = 0.00486027 loss)
+I0718 03:32:56.488109  7016 sgd_solver.cpp:106] Iteration 460, lr = 0.002
+I0718 03:32:56.507663  7016 sgd_solver.cpp:158] weight diff/data:0.000780 0.000835 0.000815 0.000258 0.000671 0.001055 0.000393 0.002731 0.000516 0.001075 
+I0718 03:32:59.476127  7016 solver.cpp:232] Iteration 480, loss = 0.00439062
+I0718 03:32:59.476127  7016 solver.cpp:248]     Train net output #0: softmax_loss = 0.00439059 (* 1 = 0.00439059 loss)
+I0718 03:32:59.476629  7016 sgd_solver.cpp:106] Iteration 480, lr = 0.002
+I0718 03:32:59.501694  7016 sgd_solver.cpp:158] weight diff/data:0.000568 0.000612 0.001013 0.000280 0.000773 0.000693 0.000415 0.003607 0.000459 0.001327 
+I0718 03:33:03.201582  7016 solver.cpp:461] Snapshotting to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_500.caffemodel
+I0718 03:33:03.226624  7016 sgd_solver.cpp:319] Snapshotting solver state to binary proto file D:/Research/LoveLiveFaceRecognition/snapshot/lovelive_lightcnn_train_iter_500.solverstate
+I0718 03:33:03.243698  7016 solver.cpp:321] Iteration 500, loss = 0.00389623
+I0718 03:33:03.243698  7016 solver.cpp:341] Iteration 500, Testing net (#0)
+I0718 03:33:03.283776  7016 solver.cpp:410]     Test net output #0: accuracy_top1 = 1
+I0718 03:33:03.283776  7016 solver.cpp:410]     Test net output #1: softmax_loss = 0.00352126 (* 1 = 0.00352126 loss)
+I0718 03:33:03.285810  7016 solver.cpp:326] Optimization Done.
+I0718 03:33:03.297341  7016 caffe.cpp:263] Optimization Done.
