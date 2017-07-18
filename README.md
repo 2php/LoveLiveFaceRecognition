@@ -16,7 +16,7 @@ We provied a uncropped dataset, download: [Mu's Dataset - BaiduYunPan](http://pa
 
 You can use the anime face detection program in [lbpcascade_animeface.Net - GitHub](https://github.com/inlmouse/lbpcascade_animeface.Net) to crop ypur dataset.
 
-**New** A pure C++ detection and dataset/label building script has been provide in .\main.cpp.
+**New** A pure C++ detection and dataset/label building script has been provide in .\cpp\main.cpp.
 
 The label marking is very simple, take .\label\train.txt as example:
 <pre><code>
@@ -48,23 +48,23 @@ After training, you will get caffemodel in the .\snapshot saved like "lovelive_l
 ### Prediction/Recogition
 Open Prediction.py in the root, change the path you need. And just have fun...
 
-## Some Results
-We use 648 images as training dataset and rest 152 images as validation dataset, the train-val partition is in random. Considered that there are only 9 girls in the dataset, the results will occourd a considerable degree of overfitting.
+## Some Pair Results
+We use 1530 images as training dataset and rest 178 images as validation dataset, the train-val partition is in random. Considered that there are only 9 girls in the dataset, the results will occourd a considerable degree of overfitting.
+
+The plotting script is locating .\matlab\lovelive.m.
 
 Result1:
-![result1](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/res3.png)
+![result1](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/res1.jpg)
 
-In the following picture, the Test Image1 is old character design version of Honoka(rarely show up in the dataset), the probability of correct recogition will fall to under 90%.
-
-Due to an unknown reason(currenttly), when it comes to Kotori, it's very hard to get a stable and precise prediction.
-
-Result2:
-![result2](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/res2.png)
-
-So we guess that it caused by the training images of Kotori in the dataset in considerable probability own the same/similar facial expression with other's. The following error may validate this problem: here Kotori(Test Image1) shows a very similar facial expression as Hanayo, and the prediction result recogized Kotori as Hanayo directly.
+In the following picture, the Test Image2 is old character design version of Honoka(rarely show up in the dataset), the probability of correct recogition will fall to under 95%.
 
 Error1:
-![err1](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err1.png)
+![err1](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err1.jpg)
+
+So we guess that it caused by the special lighting condition of Kotori in the testset in considerable probability own the similar **hair color** with Rin's. The following error may validate this problem: here these 2 test images which out of the training dataset show a very similar hair color as Maki and Umi, and the prediction result recogized will go incorrect directly.
+
+Error2:
+![err2](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err2.jpg)
 
 ## Some Test
 The next 2 poster does not show up in the train-val dataset, so we choosed them as test images.
