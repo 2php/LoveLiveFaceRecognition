@@ -80,12 +80,11 @@ The parameters of our training net are copied from bvlc_alexnet directly, so the
 Validation Accrency and Training Loss fig has paste below:
 
 Acc:
-![Acc](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/Acc.png)
+![Acc&Loss](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/Acc.jpg)
 
-Loss:
-![Loss](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/Loss.png)
+The plotting script can be found in .\matlab\loss_parser.m.
 
-Apparently, the model has been overfitted.
+Fortunately, maybe due to the model is small enough, it has been not overfitted.
 
 The intersting fact is that even human beings are difficult to distinguish these 9 girls by face(in the strict sense) in greyscale images. So we guess that the features that CNN learned will be eye colors, hair colors, hairstyles and facial exppressions. The following fig is visualized features in the caffemodel, it may be confirmed our guess from another side:
 
