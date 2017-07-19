@@ -56,7 +56,7 @@ The plotting script is locating .\matlab\lovelive.m.
 Result1:
 ![result1](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/res1.jpg)
 
-In the following picture, the Test Image2 is old character design version of Honoka(rarely show up in the dataset), the probability of correct recogition will fall to under 95%.
+The fig above is a regular result. Both of the test image is classified into correct label with a high confidence.
 
 Error1:
 ![err1](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err1.jpg)
@@ -65,6 +65,11 @@ So we guess that it caused by the special lighting condition of Kotori in the te
 
 Error2:
 ![err2](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err2.jpg)
+
+Error3:
+![err3](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err3.jpg)
+
+In order to validate our conjecture, we erase the hair of all test images. The results show that none of the test images are correctly classifed.
 
 ## Some Test
 The next 2 poster does not show up in the train-val dataset, so we choosed them as test images.
@@ -75,19 +80,20 @@ Here Umi is recognized as Nozomi.
 Kotori is recognized as Hanayo, the same error as Error1.
 
 ## Some Anaylsis
-The parameters of our training net are copied from bvlc_alexnet directly, so the results cannot be very good.
 
 Validation Accrency and Training Loss fig has paste below:
 
-Acc:
+Acc&Loss:
 ![Acc&Loss](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/Acc.jpg)
 
 The plotting script can be found in .\matlab\loss_parser.m.
 
-Fortunately, maybe due to the model is small enough, it has been not overfitted.
+Fortunately, maybe due to the tiny model, it has been not overfitted.
 
-The intersting fact is that even human beings are difficult to distinguish these 9 girls by face(in the strict sense) in greyscale images. So we guess that the features that CNN learned will be eye colors, hair colors, hairstyles and facial exppressions. The following fig is visualized features in the caffemodel, it may be confirmed our guess from another side:
+The intersting fact is that even human beings are difficult to distinguish these 9 girls by face(in the strict sense) in grayscale images. 
+So we guess that the features that CNN learned will be eye colors, hair colors and facial exppressions. The following fig is visualized features of conv2 layer with idolizedRuby input, 
+it may be confirmed our guess from another side:
 
 Visualized Feature:
-![Con1](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/con1.png)
+![Conv2](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/conv2.jpg)
 
