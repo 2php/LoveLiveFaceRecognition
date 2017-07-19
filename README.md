@@ -67,7 +67,7 @@ Error2:
 ![err2](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err2.jpg)
 
 Error3:
-![err3](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/err3.jpg)
+![err3](https://raw.githubusercontent.com/inlmouse/LoveLiveFaceRecognition/master/results/error3.jpg)
 
 In order to validate our conjecture, we erase the hair of all test images. The results show that none of the test images are correctly classifed.
 
